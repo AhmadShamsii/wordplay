@@ -1,16 +1,18 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
-import SignInForm from "./components/SignInForm";
-import SignUpForm from "./components/SignUpForm";
+import { Routes, Route, Outlet, BrowserRouter } from "react-router-dom";
+import AuthPage from "./containers/AuthPage";
+import { HelmetProvider } from "react-helmet-async";
+
+const helmetContext = {};
 
 function App() {
   return (
-    <div className="App">
-      <h1>wordplay</h1>
-      <SignInForm />
-      <SignUpForm />
-    </div>
+    <HelmetProvider context={helmetContext}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" index element={<AuthPage />} />
+        </Routes>
+      </BrowserRouter>
+    </HelmetProvider>
   );
 }
 

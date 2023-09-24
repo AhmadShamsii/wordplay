@@ -1,9 +1,8 @@
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
-import "firebase/storage";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import "firebase/compat/firestore";
+import "firebase/compat/storage";
 
-import { initializeApp } from "firebase/app";
 import {
   getAuth,
   signInWithPopup,
@@ -25,7 +24,7 @@ const firebaseConfig = {
   measurementId: "G-V8L42V2CRS",
 };
 
-const firebaseApp = initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -81,3 +80,6 @@ export const signOutUser = async () => await signOut(auth);
 export const onAuthStateChangedListener = (callback) => {
   onAuthStateChanged(auth, callback);
 };
+
+export { firebase };
+export const firestore = firebase.firestore();
