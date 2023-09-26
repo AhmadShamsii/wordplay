@@ -1,13 +1,15 @@
-import React, { useState, FormEvent, ChangeEvent } from "react";
+import React, { useState, FormEvent, ChangeEvent, useEffect } from "react";
 
 import {
   createAuthUserWithEmailAndPassword,
-  createUserDocumentFromAuth,
+  onAuthStateChangedListener,
 } from "../../utils/firebase/firebase";
 import { Modal, Input, Button, Form } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import addUserToFirestore from "./../../redux/users/saga";
 import { addUserRequest } from "../../redux/users/slice";
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import { db } from "../../utils/firebase/firebase";
 const layout = {
   labelCol: { span: 6 },
   wrapperCol: { span: 24 },
@@ -39,6 +41,8 @@ const defaultInputFields: FormFields = {
 };
 
 const SignUpForm = ({ isSignUpModalOpen, setIsSignUpModalOpen }: any) => {
+  const [currentUser, setCurrentUser] = useState(null);
+
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
@@ -52,10 +56,48 @@ const SignUpForm = ({ isSignUpModalOpen, setIsSignUpModalOpen }: any) => {
     setFormFields(defaultInputFields);
   };
 
-  const handleSubmit = (values:any) => {
-    // e.preventDefault();
-    dispatch(addUserRequest(values));
+  const handleSubmit = async (values: any) => {
+    const { firstName, lastName, username, email, password } = values;
+    try {
+      const user = await createAuthUserWithEmailAndPassword(email, password);
+
+      if (!user) return;
+      const userDocRef = doc(db, "users", username);
+
+      const userSnapshot = await getDoc(userDocRef);
+
+      if (!userSnapshot.exists()) {
+        const createdAt = new Date();
+
+        await setDoc(userDocRef, {
+          firstName,
+          lastName,
+          username,
+          email,
+          createdAt,
+        });
+
+        resetFormFields();
+      }
+    } catch (error: any) {
+      if (error.code === "auth/email-already-in-use") {
+        alert("Cannot create user, email already in use");
+      } else console.error("errrrrrrrrrr", error);
+    }
+    // dispatch(addUserRequest(values));
   };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChangedListener((user: any) => {
+      if (user) {
+        // createUserDocumentFromAuth(user);
+        console.log(user, "uuuuuuseeeerrr");
+      }
+      setCurrentUser(user);
+      console.log(user);
+    });
+    return unsubscribe;
+  }, []);
 
   // const handleSubmit = async (e: FormEvent) => {
   //   e.preventDefault();
