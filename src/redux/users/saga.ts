@@ -1,5 +1,4 @@
 import { put, takeEvery } from "redux-saga/effects";
-import { addUserRequest, addUserSuccess, addUserFailure } from "./slice";
 import { firestore } from "../../utils/firebase/firebase";
 import { PayloadAction } from "@reduxjs/toolkit";
 // Import Firebase and configure it with your Firebase project credentials
@@ -28,14 +27,12 @@ function* addUserToFirestore(action: PayloadAction<AddUserPayload>) {
 
     console.log(userData);
     yield userCollection.add(userData);
-
-    yield put(addUserSuccess());
   } catch (error: any) {
-    yield put(addUserFailure(error.message));
+    console.log("a");
   }
 }
 
 export function* usersSaga() {
-  yield takeEvery(addUserRequest.type, addUserToFirestore);
+  console.log("");
 }
 export default usersSaga;

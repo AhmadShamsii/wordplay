@@ -1,51 +1,52 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-
+import { useDispatch } from "react-redux";
 import {
   signInWithGooglePopup,
   signInAuthUserWithEmailAndPassword,
+  auth,
 } from "../../utils/firebase/firebase";
-import { Avatar, Button, Divider, Form, Input, Modal, Typography } from "antd";
-import Google from "./../../utils/assets/google.svg";
-
-const { Text } = Typography;
-const layout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 24 },
-};
-
-const validateMessages = {
-  required: "${label} is required!",
-  types: {
-    email: "${label} is not a valid email!",
-  },
-};
-
-const defaultInputFields = {
-  email: "",
-  password: "",
-};
+import {
+  Avatar,
+  Button,
+  Checkbox,
+  Divider,
+  Form,
+  Input,
+  Modal,
+  Typography,
+} from "antd";
+import { LockOutlined, MailOutlined } from "@ant-design/icons";
+import { GoogleOutlined } from "@ant-design/icons";
+import {
+  Persistence,
+  setPersistence,
+  browserLocalPersistence,
+} from "firebase/auth";
+import { useModal } from "../../containers/AuthPage/modalContext";
 
 const SignInForm = ({ isSignInModalOpen, setIsSignInModalOpen }: any) => {
-  const [form] = Form.useForm();
+  const { isModal1Visible, toggleModal1, toggleModal2 } = useModal();
 
-  const [formFields, setFormFields] = useState(defaultInputFields);
-  const { email, password } = formFields;
-
-  const resetFormFields = () => {
-    setFormFields(defaultInputFields);
-  };
+  const dispatch = useDispatch();
+  const [rememberMe, setRememberMe] = useState(true);
 
   const signInWithGoogle = async () => {
     await signInWithGooglePopup();
+    setIsSignInModalOpen(false);
   };
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-
+  const handleSubmit = async (values: any) => {
+    const { email, password } = values;
+    console.log(email, password);
     try {
-      await signInAuthUserWithEmailAndPassword(email, password);
+      let persistence: Persistence;
+      if (rememberMe) {
+        persistence = browserLocalPersistence;
+      } else return 0;
 
-      resetFormFields();
+      await setPersistence(auth, persistence);
+
+      await signInAuthUserWithEmailAndPassword(email, password);
 
       console.log("user signin");
     } catch (error: any) {
@@ -60,12 +61,7 @@ const SignInForm = ({ isSignInModalOpen, setIsSignInModalOpen }: any) => {
           console.log(error);
       }
     }
-  };
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-
-    setFormFields({ ...formFields, [name]: value });
+    setIsSignInModalOpen(false);
   };
 
   const handleCancel = () => {
@@ -75,27 +71,23 @@ const SignInForm = ({ isSignInModalOpen, setIsSignInModalOpen }: any) => {
   return (
     <>
       <Modal
-        title="Sign In with your email and password"
+        visible={isModal1Visible}
+        title="Sign In"
         open={isSignInModalOpen}
         onCancel={handleCancel}
         footer={null}
-        width={500}
+        width={400}
+        style={{ marginBottom: "10px", fontFamily: "Handlee" }}
+        closable={false}
       >
         <Form
-          style={{ marginTop: "30px" }}
-          form={form}
-          {...layout}
-          validateMessages={validateMessages}
-          layout="vertical"
-          name="basic"
+          name="login"
           initialValues={{
             remember: true,
           }}
           onFinish={handleSubmit}
-          autoComplete="off"
         >
           <Form.Item
-            label="Email"
             name="email"
             rules={[
               {
@@ -104,35 +96,75 @@ const SignInForm = ({ isSignInModalOpen, setIsSignInModalOpen }: any) => {
               },
               {
                 type: "email",
+                message: "Please enter valid email!",
               },
             ]}
           >
-            <Input onChange={handleChange} />
+            <Input prefix={<MailOutlined />} placeholder="Email" />
           </Form.Item>
-
           <Form.Item
-            label="Password"
             name="password"
             rules={[
               {
                 required: true,
-                message: "Please input your password!",
+                message: "Please input your Password!",
               },
             ]}
           >
-            <Input.Password onChange={handleChange} />
+            <Input
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              type="password"
+              placeholder="Password"
+            />
+          </Form.Item>
+          <Form.Item>
+            <Form.Item name="remember" valuePropName="checked" noStyle>
+              <Checkbox onChange={() => setRememberMe(!rememberMe)}>
+                Remember me
+              </Checkbox>
+            </Form.Item>
+
+            <a
+              style={{ position: "absolute", right: "0px" }}
+              className="login-form-forgot"
+              href=""
+            >
+              Forgot password
+            </a>
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Sign In
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="login-form-button"
+              style={{ width: "100%" }}
+            >
+              Log in
+            </Button>
+            Or
+            <Button
+              onClick={toggleModal2}
+              type="link"
+              style={{ paddingLeft: "5px" }}
+            >
+              register now!
             </Button>
           </Form.Item>
         </Form>
-        <Text>Sign In with Google</Text>
-        <Divider>
-          <Avatar onClick={signInWithGoogle} src={Google} />
+
+        <Divider style={{ fontSize: "12px" }} plain>
+          Sign In with Google
         </Divider>
+        <Button
+          shape="round"
+          type="primary"
+          style={{ width: "100%" }}
+          icon={<GoogleOutlined />}
+          onClick={signInWithGoogle}
+        >
+          Sign in with Google!
+        </Button>
       </Modal>
     </>
   );

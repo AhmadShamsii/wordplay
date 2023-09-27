@@ -5,6 +5,9 @@ const Text = Typography;
 
 export const StyledSpace = styled.div`
   margin-top: 20vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 export const StyledTitle = styled(Text)`
   font-size: 46px;

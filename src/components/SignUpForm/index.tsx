@@ -1,4 +1,4 @@
-import React, { useState, FormEvent, ChangeEvent, useEffect } from "react";
+import { useEffect } from "react";
 
 import {
   createAuthUserWithEmailAndPassword,
@@ -6,21 +6,15 @@ import {
 } from "../../utils/firebase/firebase";
 import { Modal, Input, Button, Form } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import addUserToFirestore from "./../../redux/users/saga";
-import { addUserRequest } from "../../redux/users/slice";
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../utils/firebase/firebase";
-const layout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 24 },
-};
-
-const validateMessages = {
-  required: "${label} is required!",
-  types: {
-    email: "${label} is not a valid email!",
-  },
-};
+import { setCurrentUser } from "../../containers/AuthPage/slice";
+import { usersSelector } from "../../containers/AuthPage/selectors";
+import { useModal } from "../../containers/AuthPage/modalContext";
+// const layout = {
+//   labelCol: { span: 6 },
+//   wrapperCol: { span: 24 },
+// };
 
 interface FormFields {
   firstName: string;
@@ -31,38 +25,22 @@ interface FormFields {
   confirmPassword: string;
 }
 
-const defaultInputFields: FormFields = {
-  firstName: "",
-  lastName: "",
-  username: "",
-  email: "",
-  password: "",
-  confirmPassword: "",
-};
-
 const SignUpForm = ({ isSignUpModalOpen, setIsSignUpModalOpen }: any) => {
-  const [currentUser, setCurrentUser] = useState(null);
+  const { isModal2Visible, toggleModal2 } = useModal();
 
   const dispatch = useDispatch();
   const [form] = Form.useForm();
+  const { userData } = useSelector(usersSelector);
+  console.log(userData);
 
-  const [formFields, setFormFields] = useState<FormFields>(defaultInputFields);
-  const { firstName, lastName, username, email, password, confirmPassword } =
-    formFields;
-
-  console.log(formFields);
-
-  const resetFormFields = () => {
-    setFormFields(defaultInputFields);
-  };
-
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: FormFields) => {
     const { firstName, lastName, username, email, password } = values;
     try {
       const user = await createAuthUserWithEmailAndPassword(email, password);
 
+      console.log(user?.user.uid);
       if (!user) return;
-      const userDocRef = doc(db, "users", username);
+      const userDocRef = doc(db, "users", user?.user.uid);
 
       const userSnapshot = await getDoc(userDocRef);
 
@@ -76,70 +54,24 @@ const SignUpForm = ({ isSignUpModalOpen, setIsSignUpModalOpen }: any) => {
           email,
           createdAt,
         });
-
-        resetFormFields();
       }
     } catch (error: any) {
       if (error.code === "auth/email-already-in-use") {
         alert("Cannot create user, email already in use");
       } else console.error("errrrrrrrrrr", error);
     }
-    // dispatch(addUserRequest(values));
+    setIsSignUpModalOpen(true);
   };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChangedListener((user: any) => {
       if (user) {
-        // createUserDocumentFromAuth(user);
-        console.log(user, "uuuuuuseeeerrr");
+        dispatch(setCurrentUser(user));
       }
-      setCurrentUser(user);
-      console.log(user);
     });
     return unsubscribe;
   }, []);
 
-  // const handleSubmit = async (e: FormEvent) => {
-  //   e.preventDefault();
-
-  //   if (password !== confirmPassword) {
-  //     alert("Passwords don't match");
-  //     console.log("not matched");
-  //     return;
-  //   }
-
-  //   try {
-  //     const userCredential = await createAuthUserWithEmailAndPassword(
-  //       email,
-  //       password
-  //     );
-
-  //     if (userCredential) {
-  //       const user = userCredential.user;
-
-  //       if (user) {
-  //         console.log(user);
-
-  //         await createUserDocumentFromAuth(user, {
-  //           firstName,
-  //           lastName,
-  //           username,
-  //         });
-  //         resetFormFields();
-  //       } else {
-  //         console.error("User not found in userCredential");
-  //       }
-  //     } else {
-  //       console.error("User credential not found");
-  //     }
-  //   } catch (error: any) {
-  //     if (error.code === "auth/email-already-in-use") {
-  //       alert("Cannot create user, email already in use");
-  //     } else {
-  //       console.error("Error during authentication:", error);
-  //     }
-  //   }
-  // };
   const handleCancel = () => {
     setIsSignUpModalOpen(false);
   };
@@ -155,10 +87,8 @@ const SignUpForm = ({ isSignUpModalOpen, setIsSignUpModalOpen }: any) => {
       <Form
         style={{ marginTop: "30px" }}
         form={form}
-        {...layout}
-        validateMessages={validateMessages}
         layout="vertical"
-        name="basic"
+        name="signup"
         initialValues={{
           remember: true,
         }}
@@ -166,57 +96,87 @@ const SignUpForm = ({ isSignUpModalOpen, setIsSignUpModalOpen }: any) => {
         autoComplete="off"
       >
         <Form.Item
-          label="First Name"
-          name="firstName"
-          rules={[
-            {
-              required: true,
-              message: "Please input your first name",
-            },
-          ]}
+          style={{
+            marginBottom: 0,
+          }}
         >
-          <Input />
-        </Form.Item>
+          <Form.Item
+            label="First Name"
+            name="firstName"
+            rules={[
+              {
+                required: true,
+                message: "Please input your first name",
+              },
+            ]}
+            style={{
+              display: "inline-block",
+              width: "calc(50% - 8px)",
+            }}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Last Name"
+            name="lastName"
+            rules={[
+              {
+                required: true,
+                message: "Please input your last name",
+              },
+            ]}
+            style={{
+              display: "inline-block",
+              width: "calc(50% - 8px)",
+              margin: "0 8px",
+            }}
+          >
+            <Input />
+          </Form.Item>
+        </Form.Item>{" "}
         <Form.Item
-          label="Last Name"
-          name="lastName"
-          rules={[
-            {
-              required: true,
-              message: "Please input your last name",
-            },
-          ]}
+          style={{
+            marginBottom: 0,
+          }}
         >
-          <Input />
+          <Form.Item
+            label="Username"
+            name="username"
+            rules={[
+              {
+                required: true,
+                message: "Please input your username",
+              },
+            ]}
+            style={{
+              display: "inline-block",
+              width: "calc(50% - 8px)",
+            }}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Email"
+            name="email"
+            style={{
+              display: "inline-block",
+              width: "calc(50% - 8px)",
+              margin: "0 8px",
+            }}
+            rules={[
+              {
+                required: true,
+                message: "Please input your email!",
+              },
+              {
+                type: "email",
+                message: "Please enter valid email!",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
         </Form.Item>
-        <Form.Item
-          label="Username"
-          name="username"
-          rules={[
-            {
-              required: true,
-              message: "Please input your username",
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="Email"
-          name="email"
-          rules={[
-            {
-              required: true,
-              message: "Please input your email!",
-            },
-            {
-              type: "email",
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-
         <Form.Item
           label="Password"
           name="password"
@@ -251,7 +211,6 @@ const SignUpForm = ({ isSignUpModalOpen, setIsSignUpModalOpen }: any) => {
         >
           <Input.Password />
         </Form.Item>
-
         <Form.Item>
           <Button type="primary" htmlType="submit">
             Sign Up
@@ -259,41 +218,6 @@ const SignUpForm = ({ isSignUpModalOpen, setIsSignUpModalOpen }: any) => {
         </Form.Item>
       </Form>
     </Modal>
-    // <div className="sign-up-container">
-    //   <h1>Don't have an account?</h1>
-    //   <span>Sign Up with your email and password</span>
-    //   <form onSubmit={handleSubmit}>
-    //     <input
-    //       value={displayName}
-    //
-    //       name="displayName"
-    //       type="text"
-    //       required
-    //     ></input>
-    //     <input
-    //       value={email}
-    //
-    //       name="email"
-    //       type="email"
-    //       required
-    //     ></input>
-    //     <input
-    //       value={password}
-    //
-    //       name="password"
-    //       type="password"
-    //       required
-    //     ></input>
-    //     <input
-    //       value={confirmPassword}
-    //
-    //       name="confirmPassword"
-    //       type="password"
-    //       required
-    //     ></input>
-    //     <button type="submit">Sign Up</button>
-    //   </form>
-    // </div>
   );
 };
 
