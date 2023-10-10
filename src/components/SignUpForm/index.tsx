@@ -10,31 +10,27 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../utils/firebase/firebase";
 import { setCurrentUser } from "../../containers/AuthPage/slice";
 import { usersSelector } from "../../containers/AuthPage/selectors";
-import { useModal } from "../../containers/AuthPage/modalContext";
-// const layout = {
-//   labelCol: { span: 6 },
-//   wrapperCol: { span: 24 },
-// };
+import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
 
 interface FormFields {
-  firstName: string;
-  lastName: string;
   username: string;
   email: string;
   password: string;
   confirmPassword: string;
 }
 
-const SignUpForm = ({ isSignUpModalOpen, setIsSignUpModalOpen }: any) => {
-  const { isModal2Visible, toggleModal2 } = useModal();
-
+const SignUpForm = ({
+  isSignUpModalOpen,
+  setIsSignUpModalOpen,
+  showSignInModal,
+}: any) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const { userData } = useSelector(usersSelector);
   console.log(userData);
 
   const handleSubmit = async (values: FormFields) => {
-    const { firstName, lastName, username, email, password } = values;
+    const { username, email, password } = values;
     try {
       const user = await createAuthUserWithEmailAndPassword(email, password);
 
@@ -48,8 +44,6 @@ const SignUpForm = ({ isSignUpModalOpen, setIsSignUpModalOpen }: any) => {
         const createdAt = new Date();
 
         await setDoc(userDocRef, {
-          firstName,
-          lastName,
           username,
           email,
           createdAt,
@@ -76,13 +70,19 @@ const SignUpForm = ({ isSignUpModalOpen, setIsSignUpModalOpen }: any) => {
     setIsSignUpModalOpen(false);
   };
 
+  const handleSignIn = () => {
+    showSignInModal();
+    setIsSignUpModalOpen(false);
+  };
+
   return (
     <Modal
-      title="Sign Up with your email and password"
+      title="Sign Up "
       open={isSignUpModalOpen}
       onCancel={handleCancel}
       footer={null}
       width={500}
+      style={{ marginBottom: "10px", fontFamily: "Handlee" }}
     >
       <Form
         style={{ marginTop: "30px" }}
@@ -101,46 +101,6 @@ const SignUpForm = ({ isSignUpModalOpen, setIsSignUpModalOpen }: any) => {
           }}
         >
           <Form.Item
-            label="First Name"
-            name="firstName"
-            rules={[
-              {
-                required: true,
-                message: "Please input your first name",
-              },
-            ]}
-            style={{
-              display: "inline-block",
-              width: "calc(50% - 8px)",
-            }}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Last Name"
-            name="lastName"
-            rules={[
-              {
-                required: true,
-                message: "Please input your last name",
-              },
-            ]}
-            style={{
-              display: "inline-block",
-              width: "calc(50% - 8px)",
-              margin: "0 8px",
-            }}
-          >
-            <Input />
-          </Form.Item>
-        </Form.Item>{" "}
-        <Form.Item
-          style={{
-            marginBottom: 0,
-          }}
-        >
-          <Form.Item
-            label="Username"
             name="username"
             rules={[
               {
@@ -153,16 +113,10 @@ const SignUpForm = ({ isSignUpModalOpen, setIsSignUpModalOpen }: any) => {
               width: "calc(50% - 8px)",
             }}
           >
-            <Input />
+            <Input prefix={<UserOutlined />} placeholder="Username" />
           </Form.Item>
           <Form.Item
-            label="Email"
             name="email"
-            style={{
-              display: "inline-block",
-              width: "calc(50% - 8px)",
-              margin: "0 8px",
-            }}
             rules={[
               {
                 required: true,
@@ -174,12 +128,15 @@ const SignUpForm = ({ isSignUpModalOpen, setIsSignUpModalOpen }: any) => {
               },
             ]}
           >
-            <Input />
+            <Input prefix={<MailOutlined />} placeholder="Email" />
           </Form.Item>
         </Form.Item>
         <Form.Item
-          label="Password"
           name="password"
+          style={{
+            display: "inline-block",
+            width: "calc(50% - 8px)",
+          }}
           rules={[
             {
               required: true,
@@ -187,13 +144,17 @@ const SignUpForm = ({ isSignUpModalOpen, setIsSignUpModalOpen }: any) => {
             },
           ]}
         >
-          <Input.Password />
+          <Input.Password prefix={<LockOutlined />} placeholder="Password" />
         </Form.Item>
         <Form.Item
           name="confirm"
-          label="Confirm Password"
           dependencies={["password"]}
           hasFeedback
+          style={{
+            display: "inline-block",
+            width: "calc(50%)",
+            margin: "0 0 0 8px",
+          }}
           rules={[
             {
               required: true,
@@ -209,11 +170,27 @@ const SignUpForm = ({ isSignUpModalOpen, setIsSignUpModalOpen }: any) => {
             }),
           ]}
         >
-          <Input.Password />
+          <Input.Password
+            prefix={<LockOutlined />}
+            placeholder="Confrim Password"
+          />
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit">
+          <Button
+            style={{ marginBottom: "10px" }}
+            type="primary"
+            htmlType="submit"
+          >
             Sign Up
+          </Button>
+          <br />
+          Already have an account?
+          <Button
+            onClick={handleSignIn}
+            type="link"
+            style={{ paddingLeft: "5px" }}
+          >
+            Sign in!
           </Button>
         </Form.Item>
       </Form>

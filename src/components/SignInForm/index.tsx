@@ -1,34 +1,28 @@
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import {
   signInWithGooglePopup,
   signInAuthUserWithEmailAndPassword,
   auth,
 } from "../../utils/firebase/firebase";
-import {
-  Avatar,
-  Button,
-  Checkbox,
-  Divider,
-  Form,
-  Input,
-  Modal,
-  Typography,
-} from "antd";
+import { Button, Checkbox, Divider, Form, Input, Modal, message } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { GoogleOutlined } from "@ant-design/icons";
 import {
   Persistence,
   setPersistence,
   browserLocalPersistence,
+  sendPasswordResetEmail,
 } from "firebase/auth";
-import { useModal } from "../../containers/AuthPage/modalContext";
 
-const SignInForm = ({ isSignInModalOpen, setIsSignInModalOpen }: any) => {
-  const { isModal1Visible, toggleModal1, toggleModal2 } = useModal();
-
+const SignInForm = ({
+  isSignInModalOpen,
+  setIsSignInModalOpen,
+  showSignUpModal,
+}: any) => {
   const dispatch = useDispatch();
   const [rememberMe, setRememberMe] = useState(true);
+  const [isForgotPass, setIsForgotPass] = useState(false);
 
   const signInWithGoogle = async () => {
     await signInWithGooglePopup();
@@ -68,10 +62,78 @@ const SignInForm = ({ isSignInModalOpen, setIsSignInModalOpen }: any) => {
     setIsSignInModalOpen(false);
   };
 
+  const handleRegister = () => {
+    showSignUpModal();
+    setIsSignInModalOpen(false);
+  };
+
+  const showForgotPassModal = () => {
+    setIsForgotPass(true);
+  };
+
+  const handleModalCancel = () => {
+    setIsForgotPass(false);
+  };
+
+  const handleForgotPassSubmit = async ({ email }: any) => {
+    console.log(email);
+    try {
+      sendPasswordResetEmail(auth, email).then((data) => {
+        message.success("Reset Link Sent! Check your mail!");
+      });
+    } catch (err) {
+      message.error("Reset Link is not Sent!");
+    }
+  };
+
+  const forgotPassModal = () => {
+    return (
+      <Modal
+        title="Reset Password"
+        open={isForgotPass}
+        onCancel={handleModalCancel}
+        footer={null}
+        width={300}
+        style={{
+          marginBottom: "10px",
+          fontFamily: "Handlee",
+          top: "30%",
+        }}
+        closable={false}
+      >
+        <Form
+          name="forgot-pass"
+          initialValues={{
+            remember: true,
+          }}
+          onFinish={handleForgotPassSubmit}
+        >
+          <Form.Item
+            name="email"
+            rules={[
+              {
+                required: true,
+                message: "Please input your email!",
+              },
+              {
+                type: "email",
+                message: "Please enter valid email!",
+              },
+            ]}
+          >
+            <Input prefix={<MailOutlined />} placeholder="Email" />
+          </Form.Item>
+          <Button type="primary" style={{ width: "100%" }} htmlType="submit">
+            Send Password Reset link
+          </Button>
+        </Form>
+      </Modal>
+    );
+  };
+
   return (
     <>
       <Modal
-        visible={isModal1Visible}
         title="Sign In"
         open={isSignInModalOpen}
         onCancel={handleCancel}
@@ -111,7 +173,7 @@ const SignInForm = ({ isSignInModalOpen, setIsSignInModalOpen }: any) => {
               },
             ]}
           >
-            <Input
+            <Input.Password
               prefix={<LockOutlined className="site-form-item-icon" />}
               type="password"
               placeholder="Password"
@@ -124,13 +186,18 @@ const SignInForm = ({ isSignInModalOpen, setIsSignInModalOpen }: any) => {
               </Checkbox>
             </Form.Item>
 
-            <a
-              style={{ position: "absolute", right: "0px" }}
-              className="login-form-forgot"
-              href=""
+            <Button
+              style={{
+                position: "absolute",
+                right: "-12px",
+                bottom: "2px",
+              }}
+              type="link"
+              onClick={showForgotPassModal}
             >
               Forgot password
-            </a>
+            </Button>
+            {forgotPassModal()}
           </Form.Item>
 
           <Form.Item>
@@ -144,7 +211,7 @@ const SignInForm = ({ isSignInModalOpen, setIsSignInModalOpen }: any) => {
             </Button>
             Or
             <Button
-              onClick={toggleModal2}
+              onClick={handleRegister}
               type="link"
               style={{ paddingLeft: "5px" }}
             >

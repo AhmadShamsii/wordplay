@@ -4,7 +4,6 @@ import SignUpForm from "../../components/SignUpForm";
 import { StyledButtons, StyledSpace, StyledText, StyledTitle } from "./styles";
 import ConsoleSvg from "./../../utils/assets/console.svg";
 import { useState } from "react";
-import { ModalProvider } from "./modalContext";
 
 const { Text } = Typography;
 const AuthPage = () => {
@@ -31,16 +30,16 @@ const AuthPage = () => {
         <Button onClick={showSignUpModal}>Sign Up</Button>
       </StyledButtons>
       <Button type="primary">Continue as Guest</Button>
-      <ModalProvider>
         <SignInForm
           isSignInModalOpen={isSignInModalOpen}
           setIsSignInModalOpen={setIsSignInModalOpen}
+          showSignUpModal={showSignUpModal}
         />
         <SignUpForm
           isSignUpModalOpen={isSignUpModalOpen}
           setIsSignUpModalOpen={setIsSignUpModalOpen}
+          showSignInModal={showSignInModal}
         />
-      </ModalProvider>
     </StyledSpace>
   );
 };
