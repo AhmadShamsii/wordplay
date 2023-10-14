@@ -1,6 +1,6 @@
 export interface UserState {
   user: {
-    userData: [];
+    userData: null;
     loading: boolean;
     error: string | null;
   };

@@ -1,14 +1,27 @@
-import { Routes, Route, Outlet, BrowserRouter } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
 import AuthPage from "./containers/AuthPage";
+import HomePage from "./containers/HomePage";
+import GamePage from "./containers/GamePage";
+import { usersSelector } from "./containers/AuthPage/selectors";
 import { HelmetProvider } from "react-helmet-async";
 const helmetContext = {};
 
 function App() {
+  const { userData } = useSelector(usersSelector);
   return (
     <HelmetProvider context={helmetContext}>
       <BrowserRouter>
         <Routes>
           <Route path="/" index element={<AuthPage />} />
+          <Route
+            path="/home"
+            element={userData ? <HomePage /> : <Navigate to="/" />}
+          />
+          <Route
+            path="/play"
+            element={userData ? <GamePage /> : <Navigate to="/" />}
+          />
         </Routes>
       </BrowserRouter>
     </HelmetProvider>

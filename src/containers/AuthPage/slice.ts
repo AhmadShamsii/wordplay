@@ -3,7 +3,7 @@ import { UserState } from "./types";
 
 export const initialState: UserState = {
   user: {
-    userData: [],
+    userData: null,
     loading: false,
     error: null,
   },

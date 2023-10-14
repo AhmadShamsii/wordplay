@@ -14,6 +14,7 @@ import {
   browserLocalPersistence,
   sendPasswordResetEmail,
 } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 const SignInForm = ({
   isSignInModalOpen,
@@ -21,12 +22,16 @@ const SignInForm = ({
   showSignUpModal,
 }: any) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [rememberMe, setRememberMe] = useState(true);
   const [isForgotPass, setIsForgotPass] = useState(false);
 
   const signInWithGoogle = async () => {
     await signInWithGooglePopup();
+    message.success("Signed In!");
     setIsSignInModalOpen(false);
+    navigate("home");
   };
 
   const handleSubmit = async (values: any) => {
@@ -41,9 +46,10 @@ const SignInForm = ({
       await setPersistence(auth, persistence);
 
       await signInAuthUserWithEmailAndPassword(email, password);
-
-      console.log("user signin");
+      navigate("home");
+      message.success("Signed In!");
     } catch (error: any) {
+      // TODO: use validator for this
       switch (error.code) {
         case "auth/user-not-found":
           alert("no user associated with this email");

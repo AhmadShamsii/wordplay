@@ -4,7 +4,7 @@ import {
   createAuthUserWithEmailAndPassword,
   onAuthStateChangedListener,
 } from "../../utils/firebase/firebase";
-import { Modal, Input, Button, Form } from "antd";
+import { Modal, Input, Button, Form, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../utils/firebase/firebase";
@@ -27,6 +27,9 @@ const SignUpForm = ({
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const { userData } = useSelector(usersSelector);
+
+  // TODO:  use usemomo here
+
   console.log(userData);
 
   const handleSubmit = async (values: FormFields) => {
@@ -34,7 +37,6 @@ const SignUpForm = ({
     try {
       const user = await createAuthUserWithEmailAndPassword(email, password);
 
-      console.log(user?.user.uid);
       if (!user) return;
       const userDocRef = doc(db, "users", user?.user.uid);
 
@@ -49,10 +51,13 @@ const SignUpForm = ({
           createdAt,
         });
       }
+      message.success("Account created successfully!");
     } catch (error: any) {
       if (error.code === "auth/email-already-in-use") {
+        message.error("Cannot create user, email already in use");
+
         alert("Cannot create user, email already in use");
-      } else console.error("errrrrrrrrrr", error);
+      } else message.error("Error creating account!");
     }
     setIsSignUpModalOpen(true);
   };

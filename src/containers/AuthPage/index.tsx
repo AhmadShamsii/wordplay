@@ -1,12 +1,16 @@
-import { Typography, Button } from "antd";
+import { Button, message } from "antd";
 import SignInForm from "../../components/SignInForm";
 import SignUpForm from "../../components/SignUpForm";
 import { StyledButtons, StyledSpace, StyledText, StyledTitle } from "./styles";
 import ConsoleSvg from "./../../utils/assets/console.svg";
 import { useState } from "react";
+import { getAuth, signInAnonymously } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { auth } from "../../utils/firebase/firebase";
 
-const { Text } = Typography;
 const AuthPage = () => {
+  const navigate = useNavigate();
+
   const [isSignInModalOpen, setIsSignInModalOpen] = useState<Boolean>(false);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState<Boolean>(false);
 
@@ -15,6 +19,22 @@ const AuthPage = () => {
   };
   const showSignUpModal = () => {
     setIsSignUpModalOpen(true);
+  };
+
+  const handleAnonymousSignIn = () => {
+    const auth = getAuth();
+    signInAnonymously(auth)
+      .then(() => {
+        navigate("home");
+        message.success("Welcome!");
+      })
+      .catch((error) => {
+        message.error("Error getting in!");
+      });
+  };
+
+  const handleSignOut = () => {
+    auth.signOut();
   };
 
   return (
@@ -29,17 +49,30 @@ const AuthPage = () => {
         </Button>
         <Button onClick={showSignUpModal}>Sign Up</Button>
       </StyledButtons>
-      <Button type="primary">Continue as Guest</Button>
-        <SignInForm
-          isSignInModalOpen={isSignInModalOpen}
-          setIsSignInModalOpen={setIsSignInModalOpen}
-          showSignUpModal={showSignUpModal}
-        />
-        <SignUpForm
-          isSignUpModalOpen={isSignUpModalOpen}
-          setIsSignUpModalOpen={setIsSignUpModalOpen}
-          showSignInModal={showSignInModal}
-        />
+      <Button
+        onClick={handleAnonymousSignIn}
+        style={{ padding: "0 30px" }}
+        type="primary"
+      >
+        Continue as Guest
+      </Button>
+      <Button
+        onClick={handleSignOut}
+        style={{ padding: "0 30px" }}
+        type="primary"
+      >
+        Sign out!
+      </Button>
+      <SignInForm
+        isSignInModalOpen={isSignInModalOpen}
+        setIsSignInModalOpen={setIsSignInModalOpen}
+        showSignUpModal={showSignUpModal}
+      />
+      <SignUpForm
+        isSignUpModalOpen={isSignUpModalOpen}
+        setIsSignUpModalOpen={setIsSignUpModalOpen}
+        showSignInModal={showSignInModal}
+      />
     </StyledSpace>
   );
 };
