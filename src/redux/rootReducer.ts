@@ -1,8 +1,9 @@
-import { combineReducers } from 'redux';
-import userReducer from './../containers/AuthPage/slice'
-
+import { combineReducers } from "redux";
+import userReducer from "./../containers/AuthPage/slice";
+import wordsReducer from "./words/slice";
 const rootReducer = combineReducers({
-  user: userReducer, // Add your slice reducer here
+  user: userReducer,
+  words: wordsReducer, // Add your slice reducer here
   // Add other slice reducers if you have more
 });
 

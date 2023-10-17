@@ -10,7 +10,11 @@ import {
 import Countdown from "../../components/Countdown";
 import { useState } from "react";
 import RandomAlphabet from "../../components/RandomLetter";
+import { fetchWordsRequest } from "../../redux/words/slice";
+import { useDispatch, useSelector } from "react-redux";
+
 const GamePage = () => {
+  const dispatch = useDispatch();
   const [showCountdown, setShowCountdown] = useState(false);
   const [showCountdownLimit, setShowCountdownLimit] = useState(false);
   const [showStartBtn, setShowStartBtn] = useState(true);
@@ -26,6 +30,11 @@ const GamePage = () => {
   const handleCountdown = () => {
     setShowCountdown(true);
     setShowStartBtn(false);
+  };
+
+  const handleInput = (e: any) => {
+    console.log(e.target.value);
+    dispatch(fetchWordsRequest(e.target.value));
   };
   return (
     <StyledSpace>
@@ -69,6 +78,7 @@ const GamePage = () => {
         // style={{ width: "15%" }}
         size="large"
         placeholder="Enter the word!"
+        onPressEnter={handleInput}
       />
     </StyledSpace>
   );
