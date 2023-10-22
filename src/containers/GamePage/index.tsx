@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, Input, Space, message } from "antd";
+import { Avatar, Input, Space, message } from "antd";
 import { StyledTitle } from "../HomePage/styles";
 import {
   StyledSpace,
@@ -25,20 +25,20 @@ const GamePage = () => {
 
   console.log(wordsData, "wordsdata");
 
-  const handleWrongWord = () => {};
-  const handleTimesUp = () => {};
-  const handleCorrectWord = () => {};
+  // const handleWrongWord = () => {};
+  // const handleTimesUp = () => {};
+  // const handleCorrectWord = () => {};
 
-  if (isTimesUp && !wordsData) {
-    handleTimesUp();
-  }
-  if (!isTimesUp && !wordsData) {
-    handleWrongWord();
-  }
+  // if (isTimesUp && !wordsData) {
+  //   handleTimesUp();
+  // }
+  // if (!isTimesUp && !wordsData) {
+  //   handleWrongWord();
+  // }
 
-  if (!isTimesUp && wordsData) {
-    handleCorrectWord();
-  }
+  // if (!isTimesUp && wordsData) {
+  //   handleCorrectWord();
+  // }
 
   const handleGameStart = () => {
     setShowLetter(true);
@@ -107,11 +107,9 @@ const GamePage = () => {
         placeholder="Enter the word!"
         onPressEnter={handleInput}
       />
-      <StyledCard
-        bordered={false}
-      >
-        Times Up!
-      </StyledCard>
+      {/* minor change */}
+      <StyledCard bordered={false}>minor change</StyledCard>
+      <div> change</div>
     </StyledSpace>
   );
 };
