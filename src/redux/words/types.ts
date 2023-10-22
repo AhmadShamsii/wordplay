@@ -5,4 +5,8 @@ export interface WordsState {
     wordsData: null;
     isLoading: boolean;
   };
+  score: {
+    words: number;
+    points: number;
+  }
 }

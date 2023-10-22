@@ -5,7 +5,7 @@ import {
   StyledSpace2,
   StyledScore,
   StyledButton,
-  StyledCard,
+  StyledMessage,
 } from "./styles";
 import Countdown from "../../components/Countdown";
 import { useState } from "react";
@@ -108,8 +108,7 @@ const GamePage = () => {
         onPressEnter={handleInput}
       />
       {/* minor change */}
-      <StyledCard bordered={false}>minor change</StyledCard>
-      <div> change</div>
+      <StyledMessage> change</StyledMessage>
     </StyledSpace>
   );
 };

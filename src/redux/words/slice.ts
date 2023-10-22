@@ -6,6 +6,10 @@ export const initialState: WordsState = {
     wordsData: null,
     isLoading: false,
   },
+  score: {
+    words: 0,
+    points: 0,
+  },
 };
 
 export const wordsSlice = createSlice({
@@ -16,6 +20,8 @@ export const wordsSlice = createSlice({
       state.words.isLoading = true;
     },
     fetchWordsSuccess: (state, action) => {
+      
+      console.log(action.payload.data[0].word.length, "word");
       state.words.wordsData = action.payload;
       state.words.isLoading = false;
     },

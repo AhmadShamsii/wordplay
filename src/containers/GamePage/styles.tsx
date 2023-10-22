@@ -25,11 +25,10 @@ export const StyledSpace2 = styled.div`
   display: flex;
   justify-content: space-between;
 `;
-export const StyledCard = styled(Card)`
+
+export const StyledMessage = styled.p`
   margin-top: 10%;
-  background-color: #1890ff;
-  color: white;
+  color: #1890ff;
   font-size: 16px;
-  padding: 8px;
   font-weight: bold;
 `;
