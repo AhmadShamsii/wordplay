@@ -1,6 +1,12 @@
-import { Avatar, Button, Input, Space, message } from "antd";
+import { Avatar, Button, Card, Input, Space, message } from "antd";
 import { StyledTitle } from "../HomePage/styles";
-import { StyledSpace, StyledSpace2, StyledScore, StyledButton } from "./styles";
+import {
+  StyledSpace,
+  StyledSpace2,
+  StyledScore,
+  StyledButton,
+  StyledCard,
+} from "./styles";
 import Countdown from "../../components/Countdown";
 import { useState } from "react";
 import RandomAlphabet from "../../components/RandomLetter";
@@ -101,6 +107,11 @@ const GamePage = () => {
         placeholder="Enter the word!"
         onPressEnter={handleInput}
       />
+      <StyledCard
+        bordered={false}
+      >
+        Times Up!
+      </StyledCard>
     </StyledSpace>
   );
 };

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Button } from "antd";
+import { Button, Card } from "antd";
 export const StyledSpace = styled.div`
   text-align: center;
   margin: 5% 40% 0 40%;
@@ -24,4 +24,12 @@ export const StyledSpace2 = styled.div`
   margin-top: 3%;
   display: flex;
   justify-content: space-between;
+`;
+export const StyledCard = styled(Card)`
+  margin-top: 10%;
+  background-color: #1890ff;
+  color: white;
+  font-size: 16px;
+  padding: 8px;
+  font-weight: bold;
 `;

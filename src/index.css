@@ -119,6 +119,9 @@ body {
   animation-delay: 0s;
   animation-duration: 11s;
 }
+.ant-card .ant-card-body {
+  padding: 0;
+}
 
 @keyframes animate {
   0% {
