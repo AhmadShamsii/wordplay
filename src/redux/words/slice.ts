@@ -3,7 +3,7 @@ import { WordsState, Words } from "./types";
 
 export const initialState: WordsState = {
   words: {
-    wordsData: [],
+    wordsData: null,
     isLoading: false,
   },
 };
@@ -15,8 +15,7 @@ export const wordsSlice = createSlice({
     fetchWordsRequest: (state) => {
       state.words.isLoading = true;
     },
-    fetchWordsSuccess: (state, action: PayloadAction<Words[]>) => {
-      console.log(action.payload);
+    fetchWordsSuccess: (state, action) => {
       state.words.wordsData = action.payload;
       state.words.isLoading = false;
     },

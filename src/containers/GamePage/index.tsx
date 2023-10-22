@@ -1,24 +1,38 @@
-import { Avatar, Button, Input, Space } from "antd";
+import { Avatar, Button, Input, Space, message } from "antd";
 import { StyledTitle } from "../HomePage/styles";
-import {
-  StyledSpace,
-  StyledLetter,
-  StyledSpace2,
-  StyledScore,
-  StyledButton,
-} from "./styles";
+import { StyledSpace, StyledSpace2, StyledScore, StyledButton } from "./styles";
 import Countdown from "../../components/Countdown";
 import { useState } from "react";
 import RandomAlphabet from "../../components/RandomLetter";
 import { fetchWordsRequest } from "../../redux/words/slice";
 import { useDispatch, useSelector } from "react-redux";
-
+import { wordsSelector } from "../../redux/words/selector";
 const GamePage = () => {
   const dispatch = useDispatch();
+  const { wordsData } = useSelector(wordsSelector);
   const [showCountdown, setShowCountdown] = useState(false);
   const [showCountdownLimit, setShowCountdownLimit] = useState(false);
   const [showStartBtn, setShowStartBtn] = useState(true);
   const [showLetter, setShowLetter] = useState(false);
+  const [isInputDisabled, setIsInputDisabled] = useState(true);
+  const [isTimesUp, setIsTimesUp] = useState(false);
+
+  console.log(wordsData, "wordsdata");
+
+  const handleWrongWord = () => {};
+  const handleTimesUp = () => {};
+  const handleCorrectWord = () => {};
+
+  if (isTimesUp && !wordsData) {
+    handleTimesUp();
+  }
+  if (!isTimesUp && !wordsData) {
+    handleWrongWord();
+  }
+
+  if (!isTimesUp && wordsData) {
+    handleCorrectWord();
+  }
 
   const handleGameStart = () => {
     setShowLetter(true);
@@ -26,6 +40,7 @@ const GamePage = () => {
     setShowStartBtn(false);
 
     setShowCountdownLimit(true);
+    setIsInputDisabled(false);
   };
   const handleCountdown = () => {
     setShowCountdown(true);
@@ -36,6 +51,12 @@ const GamePage = () => {
     console.log(e.target.value);
     dispatch(fetchWordsRequest(e.target.value));
   };
+
+  const handleTimeUp = () => {
+    console.log("timeup");
+    setIsTimesUp(true);
+  };
+
   return (
     <StyledSpace>
       <Space>
@@ -68,14 +89,14 @@ const GamePage = () => {
           <StyledScore>
             Time:
             {showCountdownLimit && (
-              <Countdown startFrom={5} onCountdownEnd={handleGameStart} />
+              <Countdown startFrom={5} onCountdownEnd={handleTimeUp} />
             )}
           </StyledScore>
         </div>
       </StyledSpace2>
       <br />
       <Input
-        // style={{ width: "15%" }}
+        disabled={isInputDisabled}
         size="large"
         placeholder="Enter the word!"
         onPressEnter={handleInput}
