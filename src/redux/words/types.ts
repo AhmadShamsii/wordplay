@@ -1,12 +1,15 @@
-export interface Words {}
-
 export interface WordsState {
   words: {
     wordsData: null;
     isLoading: boolean;
+    error:string
   };
   score: {
-    words: number;
+    totalWords: number;
     points: number;
-  }
+  };
+  time: {
+    isTimeStart: boolean;
+    isTimeEnd: boolean;
+  };
 }

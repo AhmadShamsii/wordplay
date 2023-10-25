@@ -13,9 +13,12 @@ import RandomAlphabet from "../../components/RandomLetter";
 import { fetchWordsRequest } from "../../redux/words/slice";
 import { useDispatch, useSelector } from "react-redux";
 import { wordsSelector } from "../../redux/words/selector";
+import { scoreSelector } from "../../redux/words/selector";
+import { setTimeStart, setTimeEnd } from "../../redux/words/slice";
 const GamePage = () => {
   const dispatch = useDispatch();
-  const { wordsData } = useSelector(wordsSelector);
+  const { wordsData, error } = useSelector(wordsSelector);
+  const { points, totalWords } = useSelector(scoreSelector);
   const [showCountdown, setShowCountdown] = useState(false);
   const [showCountdownLimit, setShowCountdownLimit] = useState(false);
   const [showStartBtn, setShowStartBtn] = useState(true);
@@ -24,6 +27,7 @@ const GamePage = () => {
   const [isTimesUp, setIsTimesUp] = useState(false);
 
   console.log(wordsData, "wordsdata");
+  console.log(points, "words");
 
   // const handleWrongWord = () => {};
   // const handleTimesUp = () => {};
@@ -61,6 +65,7 @@ const GamePage = () => {
   const handleTimeUp = () => {
     console.log("timeup");
     setIsTimesUp(true);
+    dispatch(setTimeEnd(true));
   };
 
   return (
@@ -88,8 +93,8 @@ const GamePage = () => {
       )}
       <StyledSpace2>
         <div>
-          <StyledScore>Words: 7</StyledScore>
-          <StyledScore>Points: 37</StyledScore>
+          <StyledScore>Words: {totalWords || 0}</StyledScore>
+          <StyledScore>Points: {points || 0}</StyledScore>
         </div>
         <div>
           <StyledScore>
@@ -108,7 +113,7 @@ const GamePage = () => {
         onPressEnter={handleInput}
       />
       {/* minor change */}
-      <StyledMessage> change</StyledMessage>
+      <StyledMessage> {error || ""}</StyledMessage>
     </StyledSpace>
   );
 };

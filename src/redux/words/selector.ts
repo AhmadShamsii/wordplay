@@ -6,5 +6,9 @@ const wordsSelector = createSelector(
   [wordsInitialState],
   (state) => state.words
 );
+const scoreSelector = createSelector(
+  [wordsInitialState],
+  (state) => state.score
+);
 
-export { wordsSelector };
+export { wordsSelector, scoreSelector };

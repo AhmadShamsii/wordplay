@@ -13,14 +13,16 @@ function App() {
     <HelmetProvider context={helmetContext}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" index element={<AuthPage />} />
+          <Route index path="/" element={<AuthPage />} />
           <Route
-            path="/home"
-            element={userData ? <HomePage /> : <Navigate to="/" />}
+            path="home"
+            element={<HomePage />}
+            // element={userData ? <HomePage /> : <Navigate to="/" />}
           />
           <Route
-            path="/play"
-            element={userData ? <GamePage /> : <Navigate to="/" />}
+            path="play"
+            element={<GamePage />}
+            // element={userData ? <GamePage /> : <Navigate to="/" />}
           />
         </Routes>
       </BrowserRouter>
