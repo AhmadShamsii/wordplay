@@ -36,7 +36,6 @@ const SignInForm = ({
 
   const handleSubmit = async (values: any) => {
     const { email, password } = values;
-    console.log(email, password);
     try {
       let persistence: Persistence;
       if (rememberMe) {

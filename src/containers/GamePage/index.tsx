@@ -26,9 +26,6 @@ const GamePage = () => {
   const [isInputDisabled, setIsInputDisabled] = useState(true);
   const [isTimesUp, setIsTimesUp] = useState(false);
 
-  console.log(wordsData, "wordsdata");
-  console.log(points, "words");
-
   // const handleWrongWord = () => {};
   // const handleTimesUp = () => {};
   // const handleCorrectWord = () => {};
@@ -58,12 +55,10 @@ const GamePage = () => {
   };
 
   const handleInput = (e: any) => {
-    console.log(e.target.value);
     dispatch(fetchWordsRequest(e.target.value));
   };
 
   const handleTimeUp = () => {
-    console.log("timeup");
     setIsTimesUp(true);
     dispatch(setTimeEnd(true));
   };

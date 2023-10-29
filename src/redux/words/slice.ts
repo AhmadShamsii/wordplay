@@ -5,7 +5,7 @@ export const initialState: WordsState = {
   words: {
     wordsData: null,
     isLoading: false,
-    error: ''
+    error: "",
   },
   score: {
     totalWords: 0,
@@ -36,7 +36,8 @@ export const wordsSlice = createSlice({
       state.words.isLoading = false;
     },
     fetchWordsError: (state, action) => {
-      state.words.error = action.payload
+      console.log(action.payload);
+      state.words.error = action.payload;
       state.words.isLoading = false;
     },
     setTimeStart: (state) => {

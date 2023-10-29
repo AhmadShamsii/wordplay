@@ -14,6 +14,7 @@ function* workGetWordsFetch({ payload }: any): any {
         `https://api.dictionaryapi.dev/api/v2/entries/en/${payload}`
       );
       const words = response;
+      usedWords.push(payload);
       yield put(fetchWordsSuccess(words));
     }
   } catch (err: any) {
