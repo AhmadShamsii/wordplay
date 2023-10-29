@@ -4,17 +4,20 @@ import axios from "axios";
 import { message } from "antd";
 
 const usedWords: any = [];
-function* workGetWordsFetch({ payload }: any): any {
+
+function* workGetWordsFetch(action: any): any {
+  const { word, letter } = action.payload;
+  console.log(letter);
   try {
-    if (usedWords.includes(payload)) {
+    if (usedWords.includes(word)) {
       yield put(fetchWordsError("This word has already been used."));
     } else {
       const response = yield call(
         axios.get,
-        `https://api.dictionaryapi.dev/api/v2/entries/en/${payload}`
+        `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
       );
       const words = response;
-      usedWords.push(payload);
+      usedWords.push(word);
       yield put(fetchWordsSuccess(words));
     }
   } catch (err: any) {

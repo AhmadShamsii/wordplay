@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { StyledLetter } from "../../containers/GamePage/styles";
+import { setRandomLetter } from "../../redux/words/slice";
+import { useDispatch } from "react-redux";
 
 const RandomAlphabetExcludingX = ({ generateRandomAlphabet }: any) => {
-  const [randomLetter, setRandomLetter] = useState<string | null>(null);
+  const dispatch = useDispatch();
+  const [letter, setLetter] = useState<string | null>(null);
 
   useEffect(() => {
     if (generateRandomAlphabet) {
@@ -10,15 +13,12 @@ const RandomAlphabetExcludingX = ({ generateRandomAlphabet }: any) => {
       const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
       const filteredAlphabets = alphabets.filter((letter) => letter !== "X");
       const randomIndex = Math.floor(Math.random() * filteredAlphabets.length);
-      setRandomLetter(filteredAlphabets[randomIndex]);
+      setLetter(filteredAlphabets[randomIndex]);
     }
+    dispatch(setRandomLetter(letter));
   }, [generateRandomAlphabet]);
 
-  return (
-    <div>
-      {randomLetter !== null && <StyledLetter>{randomLetter}</StyledLetter>}
-    </div>
-  );
+  return <div>{letter !== null && <StyledLetter>{letter}</StyledLetter>}</div>;
 };
 
 export default RandomAlphabetExcludingX;

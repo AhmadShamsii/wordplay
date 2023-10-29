@@ -2,7 +2,7 @@ export interface WordsState {
   words: {
     wordsData: null;
     isLoading: boolean;
-    error:string
+    error: string;
   };
   score: {
     totalWords: number;
@@ -12,4 +12,5 @@ export interface WordsState {
     isTimeStart: boolean;
     isTimeEnd: boolean;
   };
+  randomLetter: string;
 }

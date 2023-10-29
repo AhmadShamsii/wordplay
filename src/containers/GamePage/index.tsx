@@ -12,13 +12,17 @@ import { useState } from "react";
 import RandomAlphabet from "../../components/RandomLetter";
 import { fetchWordsRequest } from "../../redux/words/slice";
 import { useDispatch, useSelector } from "react-redux";
-import { wordsSelector } from "../../redux/words/selector";
-import { scoreSelector } from "../../redux/words/selector";
+import {
+  wordsSelector,
+  letterSelector,
+  scoreSelector,
+} from "../../redux/words/selector";
 import { setTimeStart, setTimeEnd } from "../../redux/words/slice";
 const GamePage = () => {
   const dispatch = useDispatch();
   const { wordsData, error } = useSelector(wordsSelector);
   const { points, totalWords } = useSelector(scoreSelector);
+  const { randomLetter } = useSelector(letterSelector);
   const [showCountdown, setShowCountdown] = useState(false);
   const [showCountdownLimit, setShowCountdownLimit] = useState(false);
   const [showStartBtn, setShowStartBtn] = useState(true);
@@ -55,7 +59,9 @@ const GamePage = () => {
   };
 
   const handleInput = (e: any) => {
-    dispatch(fetchWordsRequest(e.target.value));
+    const word = e.target.value;
+    const letter = randomLetter;
+    dispatch(fetchWordsRequest( {word, letter} ));
   };
 
   const handleTimeUp = () => {
