@@ -1,4 +1,4 @@
-import { call, put, takeEvery, select } from "redux-saga/effects";
+import { call, put, takeEvery } from "redux-saga/effects";
 import { fetchWordsRequest, fetchWordsSuccess, fetchWordsError } from "./slice";
 import axios from "axios";
 import { message } from "antd";
@@ -7,25 +7,27 @@ const usedWords: any = [];
 
 function* workGetWordsFetch({ payload }: any): any {
   const { word, letter } = payload;
-  console.log(letter);
   try {
     if (usedWords.includes(word)) {
-      yield put(fetchWordsError("This word has already been used!"));
+      throw new Error("This word has already been used!");
+    } else if (!word.startsWith(letter)) {
+      throw new Error(`Entered word doesnot starts with ${letter}!`);
     } else {
       const response = yield call(
         axios.get,
         `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
       );
+      console.log(response);
       const words = response;
       usedWords.push(word);
       yield put(fetchWordsSuccess(words));
     }
   } catch (err: any) {
+    yield put(fetchWordsError(err.message));
+
     if (err.code === "ERR_BAD_REQUEST") {
-      message.error("Invalid word!");
-      console.log(err, "error");
+      yield put(fetchWordsError("Invalid word!"));
     }
-    // Handle other errors here and dispatch an error action if necessary
   }
 }
 

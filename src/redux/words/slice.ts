@@ -15,7 +15,9 @@ export const initialState: WordsState = {
     isTimeStart: false,
     isTimeEnd: false,
   },
-  randomLetter: ''
+  randomLetter: {
+    letter: "",
+  },
 };
 
 export const wordsSlice = createSlice({
@@ -47,9 +49,9 @@ export const wordsSlice = createSlice({
     setTimeEnd: (state, action) => {
       state.time.isTimeEnd = action.payload;
     },
-    setRandomLetter: (state,action) => {
-      state.randomLetter = action.payload
-    }
+    setRandomLetter: (state, action) => {
+      state.randomLetter = action.payload;
+    },
   },
 });
 
@@ -59,6 +61,6 @@ export const {
   fetchWordsError,
   setTimeStart,
   setTimeEnd,
-  setRandomLetter
+  setRandomLetter,
 } = wordsSlice.actions;
 export default wordsSlice.reducer;

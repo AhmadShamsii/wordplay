@@ -12,5 +12,7 @@ export interface WordsState {
     isTimeStart: boolean;
     isTimeEnd: boolean;
   };
-  randomLetter: string;
+  randomLetter: {
+    letter: string;
+  };
 }

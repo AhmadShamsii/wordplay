@@ -12,7 +12,7 @@ const scoreSelector = createSelector(
 );
 const letterSelector = createSelector(
   [wordsInitialState],
-  (state) => state
+  (state) => state.randomLetter
 );
 
 export { wordsSelector, scoreSelector ,letterSelector};

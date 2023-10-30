@@ -15,9 +15,11 @@ const RandomAlphabetExcludingX = ({ generateRandomAlphabet }: any) => {
       const randomIndex = Math.floor(Math.random() * filteredAlphabets.length);
       setLetter(filteredAlphabets[randomIndex]);
     }
-    dispatch(setRandomLetter(letter));
   }, [generateRandomAlphabet]);
-
+  
+  useEffect(() => {
+    dispatch(setRandomLetter(letter));
+  }, [letter]);
   return <div>{letter !== null && <StyledLetter>{letter}</StyledLetter>}</div>;
 };
 
