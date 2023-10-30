@@ -29,6 +29,8 @@ const GamePage = () => {
   const [isInputDisabled, setIsInputDisabled] = useState(true);
   const [isTimesUp, setIsTimesUp] = useState(false);
 
+  console.log(error, "error");
+  //next i have to handle game on error
   // const handleWrongWord = () => {};
   // const handleTimesUp = () => {};
   // const handleCorrectWord = () => {};
