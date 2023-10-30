@@ -5,12 +5,12 @@ import { message } from "antd";
 
 const usedWords: any = [];
 
-function* workGetWordsFetch(action: any): any {
-  const { word, letter } = action.payload;
+function* workGetWordsFetch({ payload }: any): any {
+  const { word, letter } = payload;
   console.log(letter);
   try {
     if (usedWords.includes(word)) {
-      yield put(fetchWordsError("This word has already been used."));
+      yield put(fetchWordsError("This word has already been used!"));
     } else {
       const response = yield call(
         axios.get,
@@ -32,5 +32,5 @@ function* workGetWordsFetch(action: any): any {
 export default wordsSaga;
 
 export function* wordsSaga() {
-  yield takeEvery(fetchWordsRequest, workGetWordsFetch);
+  yield takeEvery(fetchWordsRequest.type, workGetWordsFetch);
 }
