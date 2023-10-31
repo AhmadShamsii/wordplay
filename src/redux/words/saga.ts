@@ -6,7 +6,8 @@ import { message } from "antd";
 const usedWords: any = [];
 
 function* workGetWordsFetch({ payload }: any): any {
-  const { word, letter } = payload;
+  const { word, letter, isTimeStart, isTimeEnd } = payload;
+  console.log(word, letter, isTimeStart, isTimeEnd);
   try {
     if (usedWords.includes(word)) {
       throw new Error("This word has already been used!");
@@ -21,6 +22,7 @@ function* workGetWordsFetch({ payload }: any): any {
       const words = response;
       usedWords.push(word);
       yield put(fetchWordsSuccess(words));
+      throw new Error("");
     }
   } catch (err: any) {
     yield put(fetchWordsError(err.message));

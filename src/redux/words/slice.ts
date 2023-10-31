@@ -43,13 +43,13 @@ export const wordsSlice = createSlice({
       state.words.error = action.payload;
       state.words.isLoading = false;
     },
-    setTimeStart: (state) => {
-      state.time.isTimeStart = true;
+    setTimeStart: (state, action) => {
+      state.time.isTimeStart = action.payload;
     },
     setTimeEnd: (state, action) => {
       state.time.isTimeEnd = action.payload;
     },
-    setRandomLetter: (state, action) => {
+    settingRandomLetter: (state, action) => {
       state.randomLetter = action.payload;
     },
   },
@@ -61,6 +61,6 @@ export const {
   fetchWordsError,
   setTimeStart,
   setTimeEnd,
-  setRandomLetter,
+  settingRandomLetter,
 } = wordsSlice.actions;
 export default wordsSlice.reducer;

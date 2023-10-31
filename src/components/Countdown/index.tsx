@@ -1,9 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { StyledLetter } from "../../containers/GamePage/styles";
-const Countdown = ({ startFrom, onCountdownEnd }: any) => {
+import { wordsSelector } from "../../redux/words/selector";
+import { useSelector } from "react-redux";
+
+const Countdown = ({
+  startFrom,
+  onCountdownStart,
+  onCountdownEnd,
+}: any) => {
+  const { wordsData } = useSelector(wordsSelector);
+
   const [count, setCount] = useState(startFrom);
 
   useEffect(() => {
+    if (wordsData) {
+      setCount(startFrom);
+    }
+  }, [wordsData]);
+
+  useEffect(() => {
+    if (startFrom === 10) {
+      onCountdownStart();
+    }
+
     const countdown = setTimeout(() => {
       if (count > 1) {
         setCount(count - 1);
@@ -14,7 +33,7 @@ const Countdown = ({ startFrom, onCountdownEnd }: any) => {
     }, 1000);
 
     return () => clearTimeout(countdown);
-  }, [count, onCountdownEnd]);
+  }, [count, onCountdownStart, onCountdownEnd, startFrom]);
 
   return (
     <div>

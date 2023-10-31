@@ -14,5 +14,9 @@ const letterSelector = createSelector(
   [wordsInitialState],
   (state) => state.randomLetter
 );
+const timeSelector = createSelector(
+  [wordsInitialState],
+  (state) => state.time
+);
 
-export { wordsSelector, scoreSelector ,letterSelector};
+export { wordsSelector, scoreSelector ,letterSelector,timeSelector};

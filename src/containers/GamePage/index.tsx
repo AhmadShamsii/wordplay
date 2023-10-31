@@ -1,4 +1,4 @@
-import { Avatar, Input, Space, message } from "antd";
+import { Avatar, Form, Input, Space, message } from "antd";
 import { StyledTitle } from "../HomePage/styles";
 import {
   StyledSpace,
@@ -6,48 +6,55 @@ import {
   StyledScore,
   StyledButton,
   StyledMessage,
+  StyledLetter,
 } from "./styles";
 import Countdown from "../../components/Countdown";
-import { useState } from "react";
-import RandomAlphabet from "../../components/RandomLetter";
-import { fetchWordsRequest, setTimeEnd } from "../../redux/words/slice";
+import { useEffect, useState } from "react";
+import {
+  fetchWordsRequest,
+  setTimeStart,
+  setTimeEnd,
+  settingRandomLetter,
+} from "../../redux/words/slice";
 import { useDispatch, useSelector } from "react-redux";
 import {
   wordsSelector,
   letterSelector,
   scoreSelector,
+  timeSelector,
 } from "../../redux/words/selector";
+
 const GamePage = () => {
+  const [form] = Form.useForm();
+
   const dispatch = useDispatch();
   const { wordsData, error } = useSelector(wordsSelector);
   const { points, totalWords } = useSelector(scoreSelector);
-  const letter = useSelector(letterSelector);
+  const { isTimeStart, isTimeEnd } = useSelector(timeSelector);
   const [showCountdown, setShowCountdown] = useState(false);
   const [showCountdownLimit, setShowCountdownLimit] = useState(false);
   const [showStartBtn, setShowStartBtn] = useState(true);
-  const [showLetter, setShowLetter] = useState(false);
+  const [randomLetter, setRandomLetter] = useState("");
   const [isInputDisabled, setIsInputDisabled] = useState(true);
-  const [isTimesUp, setIsTimesUp] = useState(false);
 
-  console.log(error, "error");
-  //next i have to handle game on error
-  // const handleWrongWord = () => {};
-  // const handleTimesUp = () => {};
-  // const handleCorrectWord = () => {};
+  const getRandomAlphabet = () => {
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWYZ";
+    const randomIndex = Math.floor(Math.random() * alphabet.length);
+    const randLetter = alphabet[randomIndex];
+    setRandomLetter(randLetter);
+  };
 
-  // if (isTimesUp && !wordsData) {
-  //   handleTimesUp();
-  // }
-  // if (!isTimesUp && !wordsData) {
-  //   handleWrongWord();
-  // }
+  console.log(wordsData);
 
-  // if (!isTimesUp && wordsData) {
-  //   handleCorrectWord();
-  // }
+  useEffect(() => {
+    if (wordsData) {
+      getRandomAlphabet();
+      dispatch(settingRandomLetter(randomLetter));
+    }
+  }, [wordsData, dispatch]);
 
   const handleGameStart = () => {
-    setShowLetter(true);
+    getRandomAlphabet();
     setShowCountdown(false);
     setShowStartBtn(false);
 
@@ -59,18 +66,37 @@ const GamePage = () => {
     setShowStartBtn(false);
   };
 
+  const handleGameOver = () => {
+    
+    console.log("game over");
+  };
+
   const handleInput = (e: any) => {
     const payload: any = {
       word: e.target.value.toLowerCase(),
-      letter: letter.toLowerCase(),
+      letter: randomLetter.toLowerCase(),
+      isTimeStart: isTimeStart,
+      isTimeEnd: isTimeEnd,
     };
-    dispatch(fetchWordsRequest(payload));
+    if (!isTimeEnd) {
+      dispatch(fetchWordsRequest(payload));
+    } else if (isTimeEnd) {
+      handleGameOver();
+    }
+    form.resetFields();
   };
 
   const handleTimeUp = () => {
-    setIsTimesUp(true);
     dispatch(setTimeEnd(true));
   };
+
+  const handleCountdownStart = () => {
+    dispatch(setTimeStart(true));
+  };
+
+  if (isTimeEnd) {
+    handleGameOver();
+  }
 
   return (
     <StyledSpace>
@@ -89,7 +115,7 @@ const GamePage = () => {
       {showCountdown && (
         <Countdown startFrom={3} onCountdownEnd={handleGameStart} />
       )}
-      {showLetter && <RandomAlphabet generateRandomAlphabet={showLetter} />}
+      <StyledLetter>{randomLetter}</StyledLetter>
       {showStartBtn && (
         <StyledButton onClick={handleCountdown} type="primary">
           Start
@@ -104,18 +130,27 @@ const GamePage = () => {
           <StyledScore>
             Time:
             {showCountdownLimit && (
-              <Countdown startFrom={5} onCountdownEnd={handleTimeUp} />
+              <Countdown
+                startFrom={10}
+                onCountdownStart={handleCountdownStart}
+                onCountdownEnd={handleTimeUp}
+              />
             )}
           </StyledScore>
         </div>
       </StyledSpace2>
       <br />
-      <Input
-        disabled={isInputDisabled}
-        size="large"
-        placeholder="Enter the word!"
-        onPressEnter={handleInput}
-      />
+      <Form form={form}>
+        <Form.Item name="input">
+          <Input
+            autoFocus
+            disabled={isInputDisabled}
+            size="large"
+            placeholder="Enter the word!"
+            onPressEnter={handleInput}
+          />
+        </Form.Item>
+      </Form>
       {/* minor change */}
       <StyledMessage> {error || ""}</StyledMessage>
     </StyledSpace>
