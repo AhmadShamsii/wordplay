@@ -75,6 +75,7 @@ const GamePage = () => {
     setRandomLetter("");
   };
 
+  // next will be to add the functionaloity in play again button
   const handleInput = (e: any) => {
     const payload: any = {
       word: e.target.value.toLowerCase(),
