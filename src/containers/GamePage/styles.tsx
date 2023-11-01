@@ -28,7 +28,7 @@ export const StyledSpace2 = styled.div`
 
 export const StyledMessage = styled.p`
   margin-top: 10%;
-  color: #1890ff;
+  color: #ffffff;
   font-size: 16px;
   font-weight: bold;
 `;

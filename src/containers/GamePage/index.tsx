@@ -37,6 +37,8 @@ const GamePage = () => {
   const [randomLetter, setRandomLetter] = useState("");
   const [isInputDisabled, setIsInputDisabled] = useState(true);
 
+  const [playAgainBtn, setPlayAgainButton] = useState(false);
+
   const getRandomAlphabet = () => {
     const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWYZ";
     const randomIndex = Math.floor(Math.random() * alphabet.length);
@@ -66,9 +68,11 @@ const GamePage = () => {
     setShowStartBtn(false);
   };
 
+  let gameOverMsg = "";
   const handleGameOver = () => {
-    
-    console.log("game over");
+    gameOverMsg = "Times Up! Game Over!!";
+    setPlayAgainButton(true);
+    setRandomLetter("");
   };
 
   const handleInput = (e: any) => {
@@ -94,9 +98,11 @@ const GamePage = () => {
     dispatch(setTimeStart(true));
   };
 
-  if (isTimeEnd) {
-    handleGameOver();
-  }
+  useEffect(() => {
+    if (isTimeEnd) {
+      handleGameOver();
+    }
+  }, [isTimeEnd]);
 
   return (
     <StyledSpace>
@@ -119,6 +125,11 @@ const GamePage = () => {
       {showStartBtn && (
         <StyledButton onClick={handleCountdown} type="primary">
           Start
+        </StyledButton>
+      )}
+      {playAgainBtn && (
+        <StyledButton onClick={handleCountdown} type="primary">
+          Play Again
         </StyledButton>
       )}
       <StyledSpace2>
@@ -151,8 +162,7 @@ const GamePage = () => {
           />
         </Form.Item>
       </Form>
-      {/* minor change */}
-      <StyledMessage> {error || ""}</StyledMessage>
+      <StyledMessage> {gameOverMsg || error}</StyledMessage>
     </StyledSpace>
   );
 };
