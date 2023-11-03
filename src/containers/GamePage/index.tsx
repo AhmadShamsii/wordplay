@@ -69,14 +69,16 @@ const GamePage = () => {
   const handleCountdown = () => {
     setShowCountdown(true);
     setShowStartBtn(false);
-    setPlayAgainButton(false);
   };
 
   const handlePlayAgain = () => {
-    handleCountdown();
+    // handleCountdown();
+    getRandomAlphabet();
+    setShowCountdownLimit(true);
     setPlayAgainButton(false);
-    setGameOverMsg("");
-    dispatch(setTimeEnd(false));
+    setIsInputDisabled(false);
+
+    // dispatch(setTimeEnd(false));
   };
 
   const handleGameOver = () => {
@@ -84,6 +86,8 @@ const GamePage = () => {
     setPlayAgainButton(true);
     setRandomLetter("");
     setIsInputDisabled(true);
+
+    setShowCountdownLimit(false);
   };
 
   const handleInput = (e: any) => {
