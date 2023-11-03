@@ -19,7 +19,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import {
   wordsSelector,
-  letterSelector,
   scoreSelector,
   timeSelector,
 } from "../../redux/words/selector";
@@ -37,6 +36,7 @@ const GamePage = () => {
   const [randomLetter, setRandomLetter] = useState("");
   const [isInputDisabled, setIsInputDisabled] = useState(true);
 
+  const [gameOverMsg, setGameOverMsg] = useState("");
   const [playAgainBtn, setPlayAgainButton] = useState(false);
 
   const getRandomAlphabet = () => {
@@ -62,20 +62,30 @@ const GamePage = () => {
 
     setShowCountdownLimit(true);
     setIsInputDisabled(false);
+
+    setPlayAgainButton(false);
   };
+
   const handleCountdown = () => {
     setShowCountdown(true);
     setShowStartBtn(false);
+    setPlayAgainButton(false);
   };
 
-  let gameOverMsg = "";
+  const handlePlayAgain = () => {
+    handleCountdown();
+    setPlayAgainButton(false);
+    setGameOverMsg("");
+    dispatch(setTimeEnd(false));
+  };
+
   const handleGameOver = () => {
-    gameOverMsg = "Times Up! Game Over!!";
+    setGameOverMsg("Times Up! Game Over!!");
     setPlayAgainButton(true);
     setRandomLetter("");
+    setIsInputDisabled(true);
   };
 
-  // next will be to add the functionaloity in play again button
   const handleInput = (e: any) => {
     const payload: any = {
       word: e.target.value.toLowerCase(),
@@ -83,6 +93,7 @@ const GamePage = () => {
       isTimeStart: isTimeStart,
       isTimeEnd: isTimeEnd,
     };
+    console.log(payload);
     if (!isTimeEnd) {
       dispatch(fetchWordsRequest(payload));
     } else if (isTimeEnd) {
@@ -97,6 +108,7 @@ const GamePage = () => {
 
   const handleCountdownStart = () => {
     dispatch(setTimeStart(true));
+    setPlayAgainButton(false);
   };
 
   useEffect(() => {
@@ -129,7 +141,7 @@ const GamePage = () => {
         </StyledButton>
       )}
       {playAgainBtn && (
-        <StyledButton onClick={handleCountdown} type="primary">
+        <StyledButton onClick={handlePlayAgain} type="primary">
           Play Again
         </StyledButton>
       )}
@@ -143,7 +155,7 @@ const GamePage = () => {
             Time:
             {showCountdownLimit && (
               <Countdown
-                startFrom={10}
+                startFrom={5}
                 onCountdownStart={handleCountdownStart}
                 onCountdownEnd={handleTimeUp}
               />
