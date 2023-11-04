@@ -13,9 +13,11 @@ function* workGetWordsFetch({ payload }: any): any {
       throw new Error("This word has already been used!");
     } else if (!word.startsWith(letter)) {
       throw new Error(`Entered word doesnot starts with ${letter}!`);
-    } else if (isTimeEnd) {
-      throw new Error(`Times Up! Game Over!! `);
-    } else {
+    }
+    // else if (isTimeEnd) {
+    // throw new Error(`Times Up! Game Over!! `);
+    // }
+    else {
       const response = yield call(
         axios.get,
         `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`

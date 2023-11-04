@@ -52,6 +52,9 @@ export const wordsSlice = createSlice({
     settingRandomLetter: (state, action) => {
       state.randomLetter = action.payload;
     },
+    clearErrorMsg: (state) => {
+      state.words.error = "";
+    },
   },
 });
 
@@ -61,6 +64,7 @@ export const {
   fetchWordsError,
   setTimeStart,
   setTimeEnd,
+  clearErrorMsg,
   settingRandomLetter,
 } = wordsSlice.actions;
 export default wordsSlice.reducer;

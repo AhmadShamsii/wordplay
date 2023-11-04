@@ -13,7 +13,8 @@ import { useEffect, useState } from "react";
 import {
   fetchWordsRequest,
   setTimeStart,
-  setTimeEnd,
+  clearErrorMsg,
+  setTimeEnd,             
   settingRandomLetter,
 } from "../../redux/words/slice";
 import { useDispatch, useSelector } from "react-redux";
@@ -77,7 +78,8 @@ const GamePage = () => {
     setShowCountdownLimit(true);
     setPlayAgainButton(false);
     setIsInputDisabled(false);
-
+    setGameOverMsg("");
+    form.resetFields();
     // dispatch(setTimeEnd(false));
   };
 
@@ -88,6 +90,9 @@ const GamePage = () => {
     setIsInputDisabled(true);
 
     setShowCountdownLimit(false);
+
+    dispatch(setTimeEnd(false));
+    dispatch(clearErrorMsg());
   };
 
   const handleInput = (e: any) => {
@@ -115,6 +120,7 @@ const GamePage = () => {
     setPlayAgainButton(false);
   };
 
+  console.log(error, "eee");
   useEffect(() => {
     if (isTimeEnd) {
       handleGameOver();
