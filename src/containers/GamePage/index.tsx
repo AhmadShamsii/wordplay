@@ -41,6 +41,16 @@ const GamePage = () => {
   const [gameOverMsg, setGameOverMsg] = useState("");
   const [playAgainBtn, setPlayAgainButton] = useState(false);
 
+  const [scoreData, setScoreData] = useState({
+    totalGames: 0,
+    totalWords: 0,
+    points: 0,
+    bestTotalWords: 0,
+    bestPoints: 0,
+  });
+
+  console.log(scoreData);
+
   const getRandomAlphabet = () => {
     const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWYZ";
     const randomIndex = Math.floor(Math.random() * alphabet.length);
@@ -81,7 +91,32 @@ const GamePage = () => {
     setIsInputDisabled(false);
     setGameOverMsg("");
     form.resetFields();
+
+    dispatch(clearScore());
+
     // dispatch(setTimeEnd(false));
+  };
+
+  const handleScore = (points: number, totalWords: number) => {
+    let totalGames = 0;
+    const newTotalWordsValue = scoreData.totalWords + totalWords;
+    const newPointsValue = scoreData.points + points;
+
+    const bestTotalWords = Math.max(scoreData.bestTotalWords, totalWords);
+    const bestPoints = Math.max(scoreData.bestPoints, points);
+
+    function gamesCounter() {
+      totalGames++;
+    }
+    gamesCounter();
+    // Update the state with the new values
+    setScoreData({
+      totalGames,
+      totalWords: newTotalWordsValue,
+      points: newPointsValue,
+      bestTotalWords,
+      bestPoints,
+    });
   };
 
   const handleGameOver = () => {
@@ -94,7 +129,7 @@ const GamePage = () => {
 
     dispatch(setTimeEnd(false));
     dispatch(clearErrorMsg());
-    dispatch(clearScore());
+    handleScore(points, totalWords);
   };
 
   const handleInput = (e: any) => {
@@ -122,7 +157,6 @@ const GamePage = () => {
     setPlayAgainButton(false);
   };
 
-  console.log(error, "eee");
   useEffect(() => {
     if (isTimeEnd) {
       handleGameOver();
