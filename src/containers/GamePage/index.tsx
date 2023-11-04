@@ -14,7 +14,8 @@ import {
   fetchWordsRequest,
   setTimeStart,
   clearErrorMsg,
-  setTimeEnd,             
+  setTimeEnd,
+  clearScore,
   settingRandomLetter,
 } from "../../redux/words/slice";
 import { useDispatch, useSelector } from "react-redux";
@@ -93,6 +94,7 @@ const GamePage = () => {
 
     dispatch(setTimeEnd(false));
     dispatch(clearErrorMsg());
+    dispatch(clearScore());
   };
 
   const handleInput = (e: any) => {

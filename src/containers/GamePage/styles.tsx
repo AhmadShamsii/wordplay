@@ -12,7 +12,7 @@ export const StyledLetter = styled.h1`
 export const StyledButton = styled(Button)`
   margin: 14% 0;
   font-family: Croissant One;
-  width: 250px;
+  width: 200px;
   height: 50px;
   font-size: 20px;
 `;

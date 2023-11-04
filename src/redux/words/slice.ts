@@ -55,6 +55,10 @@ export const wordsSlice = createSlice({
     clearErrorMsg: (state) => {
       state.words.error = "";
     },
+    clearScore: (state) => {
+      state.score.points = 0;
+      state.score.totalWords = 0;
+    }
   },
 });
 
@@ -66,5 +70,6 @@ export const {
   setTimeEnd,
   clearErrorMsg,
   settingRandomLetter,
+  clearScore
 } = wordsSlice.actions;
 export default wordsSlice.reducer;
