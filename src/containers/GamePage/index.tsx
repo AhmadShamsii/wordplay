@@ -110,6 +110,7 @@ const GamePage = () => {
     }
     gamesCounter();
     // Update the state with the new values
+    //minor changes
     setScoreData({
       totalGames,
       totalWords: newTotalWordsValue,
