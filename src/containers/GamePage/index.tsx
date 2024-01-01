@@ -40,6 +40,7 @@ const GamePage = () => {
 
   const [gameOverMsg, setGameOverMsg] = useState("");
   const [playAgainBtn, setPlayAgainButton] = useState(false);
+  const [games, setGames] = useState<number>(1);
 
   const [scoreData, setScoreData] = useState({
     totalGames: 0,
@@ -57,8 +58,6 @@ const GamePage = () => {
     const randLetter = alphabet[randomIndex];
     setRandomLetter(randLetter);
   };
-
-  console.log(wordsData);
 
   useEffect(() => {
     if (wordsData) {
@@ -98,20 +97,16 @@ const GamePage = () => {
   };
 
   const handleScore = (points: number, totalWords: number) => {
-    let totalGames = 0;
+    setGames((prevGames) => prevGames + 1);
     const newTotalWordsValue = scoreData.totalWords + totalWords;
     const newPointsValue = scoreData.points + points;
 
     const bestTotalWords = Math.max(scoreData.bestTotalWords, totalWords);
     const bestPoints = Math.max(scoreData.bestPoints, points);
 
-    function gamesCounter() {
-      totalGames++;
-    }
-    gamesCounter();
     // Update the state with the new values
     setScoreData({
-      totalGames,
+      totalGames: games,
       totalWords: newTotalWordsValue,
       points: newPointsValue,
       bestTotalWords,

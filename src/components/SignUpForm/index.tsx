@@ -57,7 +57,8 @@ const SignUpForm = ({
         message.error("Cannot create user, email already in use");
 
         alert("Cannot create user, email already in use");
-      } else message.error("Error creating account!");
+      } else console.log(error);
+      message.error("Error creating account!");
     }
     setIsSignUpModalOpen(true);
   };
