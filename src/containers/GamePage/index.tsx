@@ -1,4 +1,4 @@
-import { Avatar, Form, Input, Space, message } from "antd";
+import { Avatar, Form, Input, Space } from "antd";
 import { StyledTitle } from "../HomePage/styles";
 import {
   StyledSpace,
@@ -24,9 +24,14 @@ import {
   scoreSelector,
   timeSelector,
 } from "../../redux/words/selector";
+import { usersSelector } from "../AuthPage/selectors";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
 
 const GamePage = () => {
   const [form] = Form.useForm();
+  const { userData } = useSelector(usersSelector);
+  console.log(userData, "userData");
 
   const dispatch = useDispatch();
   const { wordsData, error } = useSelector(wordsSelector);
@@ -41,6 +46,7 @@ const GamePage = () => {
   const [gameOverMsg, setGameOverMsg] = useState("");
   const [playAgainBtn, setPlayAgainButton] = useState(false);
   const [games, setGames] = useState<number>(1);
+  const [usedWords, setUsedWords] = useState<string[]>([]);
 
   const [scoreData, setScoreData] = useState({
     totalGames: 0,
@@ -50,8 +56,7 @@ const GamePage = () => {
     bestPoints: 0,
   });
 
-  console.log(scoreData);
-
+  // Function to get a random alphabet and update the Redux state
   const getRandomAlphabet = () => {
     const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWYZ";
     const randomIndex = Math.floor(Math.random() * alphabet.length);
@@ -59,6 +64,7 @@ const GamePage = () => {
     setRandomLetter(randLetter);
   };
 
+  // Effect to initialize random alphabet when wordsData changes
   useEffect(() => {
     if (wordsData) {
       getRandomAlphabet();
@@ -66,6 +72,7 @@ const GamePage = () => {
     }
   }, [wordsData, dispatch]);
 
+  // Handler for starting the game
   const handleGameStart = () => {
     getRandomAlphabet();
     setShowCountdown(false);
@@ -82,6 +89,8 @@ const GamePage = () => {
     setShowStartBtn(false);
   };
 
+  // Handler for playing again
+
   const handlePlayAgain = () => {
     // handleCountdown();
     getRandomAlphabet();
@@ -89,14 +98,12 @@ const GamePage = () => {
     setPlayAgainButton(false);
     setIsInputDisabled(false);
     setGameOverMsg("");
-    form.resetFields();
-
     dispatch(clearScore());
 
     // dispatch(setTimeEnd(false));
   };
-
-  const handleScore = (points: number, totalWords: number) => {
+  // Function to update user data in Firestore
+  const updateUserData = async () => {
     setGames((prevGames) => prevGames + 1);
     const newTotalWordsValue = scoreData.totalWords + totalWords;
     const newPointsValue = scoreData.points + points;
@@ -104,16 +111,32 @@ const GamePage = () => {
     const bestTotalWords = Math.max(scoreData.bestTotalWords, totalWords);
     const bestPoints = Math.max(scoreData.bestPoints, points);
 
-    // Update the state with the new values
-    setScoreData({
+    const uid = userData?.uid;
+    const userRef = firebase.firestore().collection("users").doc(uid);
+    const stats = {
       totalGames: games,
       totalWords: newTotalWordsValue,
-      points: newPointsValue,
-      bestTotalWords,
-      bestPoints,
-    });
+      totalPoints: newPointsValue,
+      bestTotalWords: bestTotalWords,
+      bestTotalPoints: bestPoints,
+    };
+    console.log(stats, "stattttttttttts");
+    try {
+      // Get the current user data
+      const doc = await userRef.get();
+
+      if (doc.exists) {
+        await userRef.update({ stats: stats });
+        console.log("User data updated successfully");
+      } else {
+        console.log("User not found");
+      }
+    } catch (error) {
+      console.error("Error updating user data: ", error);
+    }
   };
 
+  // Handler for game over
   const handleGameOver = () => {
     setGameOverMsg("Times Up! Game Over!!");
     setPlayAgainButton(true);
@@ -124,19 +147,24 @@ const GamePage = () => {
 
     dispatch(setTimeEnd(false));
     dispatch(clearErrorMsg());
-    handleScore(points, totalWords);
+    setUsedWords([]);
+    form.resetFields();
+    updateUserData();
   };
 
+  // Handler for input changes
   const handleInput = (e: any) => {
     const payload: any = {
       word: e.target.value.toLowerCase(),
       letter: randomLetter.toLowerCase(),
-      isTimeStart: isTimeStart,
-      isTimeEnd: isTimeEnd,
     };
-    console.log(payload);
     if (!isTimeEnd) {
-      dispatch(fetchWordsRequest(payload));
+      setUsedWords((prevWords) => [...prevWords, payload.word]);
+      if (usedWords.includes(payload.word)) setGameOverMsg("already used");
+      else if (!usedWords.includes(payload.word)) {
+        setGameOverMsg("");
+        dispatch(fetchWordsRequest(payload));
+      }
     } else if (isTimeEnd) {
       handleGameOver();
     }
@@ -147,11 +175,13 @@ const GamePage = () => {
     dispatch(setTimeEnd(true));
   };
 
+  // Handler for starting the countdown
   const handleCountdownStart = () => {
     dispatch(setTimeStart(true));
     setPlayAgainButton(false);
   };
 
+  // Effect to handle game over when isTimeEnd changes
   useEffect(() => {
     if (isTimeEnd) {
       handleGameOver();
