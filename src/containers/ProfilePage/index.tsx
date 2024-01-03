@@ -3,6 +3,7 @@ import { StyledSpace, StyledSpace2, StyledText } from "../ProfilePage/styles";
 import { useNavigate } from "react-router";
 const ProfilePage = () => {
   const navigate = useNavigate();
+  // gotta chanage the route
   return (
     <StyledSpace>
       <ArrowLeftOutlined onClick={() => navigate(-1)} />
