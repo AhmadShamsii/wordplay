@@ -27,9 +27,11 @@ import {
 import { usersSelector } from "../AuthPage/selectors";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
+import { useNavigate } from "react-router";
 
 const GamePage = () => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
   const { userData } = useSelector(usersSelector);
   console.log(userData, "userData");
 
@@ -152,6 +154,12 @@ const GamePage = () => {
     updateUserData();
   };
 
+  //profile
+  //stats
+  //leaderboard
+  //settings
+  //logout
+
   // Handler for input changes
   const handleInput = (e: any) => {
     const payload: any = {
@@ -192,15 +200,18 @@ const GamePage = () => {
     <StyledSpace>
       <Space>
         <StyledTitle>Wordplay</StyledTitle>
-        <Avatar
-          style={{
-            backgroundColor: "#1890ff",
-            verticalAlign: "middle",
-          }}
-          size="large"
-        >
-          AS
-        </Avatar>
+        {!userData?.isAnonymous && (
+          <Avatar
+            onClick={() => navigate("/profile")}
+            style={{
+              backgroundColor: "#1890ff",
+              verticalAlign: "middle",
+            }}
+            size="large"
+          >
+            AS
+          </Avatar>
+        )}
       </Space>
       {showCountdown && (
         <Countdown startFrom={3} onCountdownEnd={handleGameStart} />
