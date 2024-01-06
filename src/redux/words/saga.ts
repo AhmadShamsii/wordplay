@@ -2,13 +2,12 @@ import { call, put, takeEvery } from "redux-saga/effects";
 import { fetchWordsRequest, fetchWordsSuccess, fetchWordsError } from "./slice";
 import axios from "axios";
 
-
 function* workGetWordsFetch({ payload }: any): any {
   const { word, letter } = payload;
   try {
     // if (usedWords.includes(word)) {
     //   throw new Error("This word has already been used!");
-    // } else 
+    // } else
     if (!word.startsWith(letter)) {
       throw new Error(`Entered word doesnot starts with ${letter}!`);
     } else {
@@ -16,6 +15,7 @@ function* workGetWordsFetch({ payload }: any): any {
         axios.get,
         `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
       );
+
       const words = response;
       yield put(fetchWordsSuccess(words));
       throw new Error("");

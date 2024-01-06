@@ -9,7 +9,7 @@ import {
   StyledLetter,
 } from "./styles";
 import Countdown from "../../components/Countdown";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   fetchWordsRequest,
   setTimeStart,
@@ -49,14 +49,7 @@ const GamePage = () => {
   const [playAgainBtn, setPlayAgainButton] = useState(false);
   const [games, setGames] = useState<number>(1);
   const [usedWords, setUsedWords] = useState<string[]>([]);
-
-  const [scoreData, setScoreData] = useState({
-    totalGames: 0,
-    totalWords: 0,
-    points: 0,
-    bestTotalWords: 0,
-    bestPoints: 0,
-  });
+  const ref = useRef<any>(null);
 
   // Function to get a random alphabet and update the Redux state
   const getRandomAlphabet = () => {
@@ -73,6 +66,11 @@ const GamePage = () => {
       dispatch(settingRandomLetter(randomLetter));
     }
   }, [wordsData, dispatch]);
+
+  // focus when game starts
+  useEffect(() => {
+    ref.current.focus();
+  }, [isInputDisabled]);
 
   // Handler for starting the game
   const handleGameStart = () => {
@@ -106,6 +104,13 @@ const GamePage = () => {
   };
   // Function to update user data in Firestore
   const updateUserData = async () => {
+    const scoreData = {
+      totalGames: 0,
+      totalWords: 0,
+      points: 0,
+      bestTotalWords: 0,
+      bestPoints: 0,
+    };
     setGames((prevGames) => prevGames + 1);
     const newTotalWordsValue = scoreData.totalWords + totalWords;
     const newPointsValue = scoreData.points + points;
@@ -249,6 +254,7 @@ const GamePage = () => {
       <Form form={form}>
         <Form.Item name="input">
           <Input
+            ref={ref}
             autoFocus
             disabled={isInputDisabled}
             size="large"

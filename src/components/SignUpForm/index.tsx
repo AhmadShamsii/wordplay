@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import {
+  auth,
   createAuthUserWithEmailAndPassword,
   onAuthStateChangedListener,
 } from "../../utils/firebase/firebase";
@@ -11,6 +12,7 @@ import { db } from "../../utils/firebase/firebase";
 import { setCurrentUser } from "../../containers/AuthPage/slice";
 import { usersSelector } from "../../containers/AuthPage/selectors";
 import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
+import { sendEmailVerification } from "firebase/auth";
 
 interface FormFields {
   username: string;
@@ -26,19 +28,34 @@ const SignUpForm = ({
 }: any) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
+  const [verificationEmailSent, setVerificationEmailSent] = useState(false);
+  const [accountCreated, setAccountCreated] = useState(false);
+  const [verified, setVerified] = useState(auth.currentUser?.emailVerified);
+
   const { userData } = useSelector(usersSelector);
 
-  // TODO:  use usemomo here
-
-  console.log(userData);
-
+  console.log(auth.currentUser);
   const handleSubmit = async (values: FormFields) => {
     const { username, email, password } = values;
-    try {
-      const user = await createAuthUserWithEmailAndPassword(email, password);
 
-      if (!user) return;
-      const userDocRef = doc(db, "users", user?.user.uid);
+    try {
+      const userCredentials = await createAuthUserWithEmailAndPassword(
+        email,
+        password
+      );
+
+      if (!userCredentials) {
+        message.error("Error creating user credentials.");
+        return;
+      }
+
+      await sendEmailVerification(userCredentials?.user);
+      setVerificationEmailSent(true);
+
+      if (verificationEmailSent)
+        message.success("Verification email sent, check your indox");
+
+      const userDocRef = doc(db, "users", userCredentials?.user.uid);
 
       const userSnapshot = await getDoc(userDocRef);
 
@@ -51,16 +68,31 @@ const SignUpForm = ({
           createdAt,
         });
       }
-      message.success("Account created successfully!");
+
+      // relod to get the user verificatio state
+      setInterval(() => {
+        if (!auth.currentUser?.emailVerified) {
+          return auth.currentUser?.reload().then(() => {
+            setVerified(auth.currentUser?.emailVerified);
+            if (auth.currentUser?.emailVerified) {
+              setAccountCreated(true);
+              message.success("Account created successfully!");
+              setIsSignUpModalOpen(false);
+            }
+          });
+        } else {
+          return;
+        }
+      }, 2000);
     } catch (error: any) {
       if (error.code === "auth/email-already-in-use") {
         message.error("Cannot create user, email already in use");
-
-        alert("Cannot create user, email already in use");
-      } else console.log(error);
-      message.error("Error creating account!");
+      } else {
+        console.log(error);
+        message.error("Error creating account!");
+      }
+      setIsSignUpModalOpen(true);
     }
-    setIsSignUpModalOpen(true);
   };
 
   useEffect(() => {
@@ -79,6 +111,15 @@ const SignUpForm = ({
   const handleSignIn = () => {
     showSignInModal();
     setIsSignUpModalOpen(false);
+  };
+
+  const validatePassword = (_: any, value: any) => {
+    if (value && value.length < 8) {
+      return Promise.reject(
+        new Error("Password must be at least 8 characters!")
+      );
+    }
+    return Promise.resolve();
   };
 
   return (
@@ -147,6 +188,9 @@ const SignUpForm = ({
             {
               required: true,
               message: "Please input your password!",
+            },
+            {
+              validator: validatePassword,
             },
           ]}
         >

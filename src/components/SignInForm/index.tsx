@@ -13,6 +13,8 @@ import {
   setPersistence,
   browserLocalPersistence,
   sendPasswordResetEmail,
+  getAuth,
+  browserSessionPersistence,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
@@ -21,7 +23,6 @@ const SignInForm = ({
   setIsSignInModalOpen,
   showSignUpModal,
 }: any) => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [rememberMe, setRememberMe] = useState(true);
@@ -37,30 +38,29 @@ const SignInForm = ({
   const handleSubmit = async (values: any) => {
     const { email, password } = values;
     try {
-      let persistence: Persistence;
       if (rememberMe) {
-        persistence = browserLocalPersistence;
-      } else return 0;
-
-      await setPersistence(auth, persistence);
-
+        const auth = getAuth();
+        setPersistence(auth, browserSessionPersistence)
+          .then(() => {
+            console.log("yes");
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
       await signInAuthUserWithEmailAndPassword(email, password);
       navigate("home");
       message.success("Signed In!");
+      setIsSignInModalOpen(false);
     } catch (error: any) {
-      // TODO: use validator for this
-      switch (error.code) {
-        case "auth/user-not-found":
-          alert("no user associated with this email");
-          break;
-        case "auth/wrong-password":
-          alert("wrong password");
-          break;
-        default:
-          console.log(error);
+      if (error.code === "auth/invalid-login-credentials") {
+        message.error("Invalid email or passoword!");
+      } else {
+        console.log(error);
+        message.error("Error logging in!");
       }
+      setIsSignInModalOpen(true);
     }
-    setIsSignInModalOpen(false);
   };
 
   const handleCancel = () => {
@@ -81,13 +81,12 @@ const SignInForm = ({
   };
 
   const handleForgotPassSubmit = async ({ email }: any) => {
-    console.log(email);
     try {
-      sendPasswordResetEmail(auth, email).then((data) => {
-        message.success("Reset Link Sent! Check your mail!");
-      });
+      await sendPasswordResetEmail(auth, email);
+      message.success("Reset Link Sent! Check your mail!");
     } catch (err) {
-      message.error("Reset Link is not Sent!");
+      console.error("Error sending reset link:", err);
+      message.error("Error sending reset link. Please try again.");
     }
   };
 

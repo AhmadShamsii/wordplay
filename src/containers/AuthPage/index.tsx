@@ -33,10 +33,6 @@ const AuthPage = () => {
       });
   };
 
-  const handleSignOut = () => {
-    auth.signOut();
-  };
-
   return (
     <StyledSpace>
       <StyledTitle>WordPlay</StyledTitle>
@@ -55,13 +51,6 @@ const AuthPage = () => {
         type="primary"
       >
         Continue as Guest
-      </Button>
-      <Button
-        onClick={handleSignOut}
-        style={{ padding: "0 30px" }}
-        type="primary"
-      >
-        Sign out!
       </Button>
       <SignInForm
         isSignInModalOpen={isSignInModalOpen}
