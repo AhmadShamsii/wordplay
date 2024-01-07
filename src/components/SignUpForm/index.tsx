@@ -34,7 +34,17 @@ const SignUpForm = ({
 
   const { userData } = useSelector(usersSelector);
 
-  console.log(auth.currentUser);
+  console.log(verified, "verified");
+  const sendEmailVerificationLink = async (userCredentials: any) => {
+    await sendEmailVerification(userCredentials?.user);
+    setVerificationEmailSent(true);
+  };
+
+  useEffect(() => {
+    if (verificationEmailSent)
+      message.success("Verification email sent, check your indox");
+  }, [verificationEmailSent]);
+
   const handleSubmit = async (values: FormFields) => {
     const { username, email, password } = values;
 
@@ -49,32 +59,30 @@ const SignUpForm = ({
         return;
       }
 
-      await sendEmailVerification(userCredentials?.user);
-      setVerificationEmailSent(true);
+      sendEmailVerificationLink(userCredentials);
 
-      if (verificationEmailSent)
-        message.success("Verification email sent, check your indox");
+      const addUserToDB = async () => {
+        const userDocRef = doc(db, "users", userCredentials?.user.uid);
 
-      const userDocRef = doc(db, "users", userCredentials?.user.uid);
+        const userSnapshot = await getDoc(userDocRef);
 
-      const userSnapshot = await getDoc(userDocRef);
+        if (!userSnapshot.exists()) {
+          const createdAt = new Date();
 
-      if (!userSnapshot.exists()) {
-        const createdAt = new Date();
-
-        await setDoc(userDocRef, {
-          username,
-          email,
-          createdAt,
-        });
-      }
-
+          await setDoc(userDocRef, {
+            username,
+            email,
+            createdAt,
+          });
+        }
+      };
       // relod to get the user verificatio state
       setInterval(() => {
         if (!auth.currentUser?.emailVerified) {
           return auth.currentUser?.reload().then(() => {
             setVerified(auth.currentUser?.emailVerified);
-            if (auth.currentUser?.emailVerified) {
+            if (auth.currentUser?.emailVerified && verified) {
+              addUserToDB();
               setAccountCreated(true);
               message.success("Account created successfully!");
               setIsSignUpModalOpen(false);
@@ -85,7 +93,11 @@ const SignUpForm = ({
         }
       }, 2000);
     } catch (error: any) {
-      if (error.code === "auth/email-already-in-use") {
+      if (verified) {
+        message.success("Account created successfully!");
+      } else if (!verified) {
+        message.warning("Kindly verify first!");
+      } else if (error.code === "auth/email-already-in-use") {
         message.error("Cannot create user, email already in use");
       } else {
         console.log(error);

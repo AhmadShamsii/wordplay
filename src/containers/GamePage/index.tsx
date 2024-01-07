@@ -28,13 +28,15 @@ import { usersSelector } from "../AuthPage/selectors";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import { useNavigate } from "react-router";
+import { auth } from "../../utils/firebase/firebase";
 
 const GamePage = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const { userData } = useSelector(usersSelector);
+  const currentUser = auth?.currentUser;
+  console.log(currentUser, "currentuser");
   console.log(userData, "userData");
-
   const dispatch = useDispatch();
   const { wordsData, error } = useSelector(wordsSelector);
   const { points, totalWords } = useSelector(scoreSelector);
@@ -118,7 +120,7 @@ const GamePage = () => {
     const bestTotalWords = Math.max(scoreData.bestTotalWords, totalWords);
     const bestPoints = Math.max(scoreData.bestPoints, points);
 
-    const uid = userData?.uid;
+    const uid = currentUser?.uid;
     const userRef = firebase.firestore().collection("users").doc(uid);
     const stats = {
       totalGames: games,
@@ -205,7 +207,7 @@ const GamePage = () => {
     <StyledSpace>
       <Space>
         <StyledTitle>Wordplay</StyledTitle>
-        {!userData?.isAnonymous && (
+        {!currentUser?.isAnonymous && (
           <Avatar
             onClick={() => navigate("/profile")}
             style={{
