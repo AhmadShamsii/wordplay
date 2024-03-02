@@ -3,7 +3,11 @@ import { Button, Typography } from "antd";
 const { Text, Link } = Typography;
 
 export const StyledSpace = styled.div`
-  margin: 5% 5% 0 5%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-content: left;
+  margin: 5% 41% 0 41%;
 `;
 export const StyledSpace2 = styled.div`
   text-align: center;
