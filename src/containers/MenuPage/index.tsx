@@ -1,16 +1,27 @@
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { StyledSpace, StyledSpace2, StyledText } from "../MenuPage/styles";
+import { StyledSpace, StyledSpace2, StyledText } from "./styles";
 import { useNavigate } from "react-router";
+import { getAuth, signOut } from "firebase/auth";
 
-const ProfilePage = () => {
+const MenuPage = () => {
   const navigate = useNavigate();
 
+  const handleLogout = async () => {
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        navigate("/");
+        console.log("Sign-out successful.");
+      })
+      .catch((error) => {
+        // An error happened.
+      });
+  };
+
+  // gotta chanage the route
   return (
     <StyledSpace>
-      <ArrowLeftOutlined
-        style={{ position: "relative", right: "88px" }}
-        onClick={() => navigate(-1)}
-      />
+      <ArrowLeftOutlined onClick={() => navigate(-1)} />
       <StyledSpace2>
         <StyledText
           onClick={() => navigate("/menu/profile")}
@@ -36,8 +47,11 @@ const ProfilePage = () => {
         >
           Settings
         </StyledText>
+        <StyledText style={{ color: "white" }} onClick={handleLogout}>
+          Logout
+        </StyledText>
       </StyledSpace2>
     </StyledSpace>
   );
 };
-export default ProfilePage;
+export default MenuPage;

@@ -122,6 +122,21 @@ body {
 .ant-card .ant-card-body {
   padding: 0;
 }
+.anticon-save {
+  margin-left: 30px;
+}
+.transparent-background .ant-select-selector {
+  background: transparent !important;
+}
+.ant-input-number-input {
+  background: transparent !important;
+}
+.ant-select-arrow {
+  color: #aeb4c1 !important;
+}
+.ant-input::placeholder {
+  color: #aeb4c1; /* Set the color you want for the placeholder */
+}
 
 @keyframes animate {
   0% {

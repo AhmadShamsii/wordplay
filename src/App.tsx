@@ -6,6 +6,8 @@ import GamePage from "./containers/GamePage";
 import { usersSelector } from "./containers/AuthPage/selectors";
 import { HelmetProvider } from "react-helmet-async";
 import ProfilePage from "./containers/ProfilePage";
+import MenuPage from "./containers/MenuPage";
+import SettingsPage from "./containers/SettingsPage";
 const helmetContext = {};
 
 function App() {
@@ -26,7 +28,9 @@ function App() {
             element={<GamePage />}
             // element={userData ? <GamePage /> : <Navigate to="/" />}
           />
-          <Route path="profile" element={<ProfilePage />} />
+          <Route path="menu" element={<MenuPage />} />
+          <Route path="menu/profile" element={<ProfilePage />} />
+          <Route path="menu/settings" element={<SettingsPage />} />
         </Routes>
       </BrowserRouter>
     </HelmetProvider>

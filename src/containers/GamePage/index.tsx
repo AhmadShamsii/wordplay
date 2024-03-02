@@ -209,10 +209,11 @@ const GamePage = () => {
         <StyledTitle>Wordplay</StyledTitle>
         {!currentUser?.isAnonymous && (
           <Avatar
-            onClick={() => navigate("/profile")}
+            onClick={() => navigate("/menu")}
             style={{
               backgroundColor: "#1890ff",
               verticalAlign: "middle",
+              cursor: "pointer",
             }}
             size="large"
           >

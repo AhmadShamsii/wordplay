@@ -1,18 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import {
-  auth,
   createAuthUserWithEmailAndPassword,
   onAuthStateChangedListener,
 } from "../../utils/firebase/firebase";
 import { Modal, Input, Button, Form, message } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../utils/firebase/firebase";
 import { setCurrentUser } from "../../containers/AuthPage/slice";
-import { usersSelector } from "../../containers/AuthPage/selectors";
 import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
-import { sendEmailVerification } from "firebase/auth";
 
 interface FormFields {
   username: string;
@@ -28,22 +25,6 @@ const SignUpForm = ({
 }: any) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-  const [verificationEmailSent, setVerificationEmailSent] = useState(false);
-  const [accountCreated, setAccountCreated] = useState(false);
-  const [verified, setVerified] = useState(auth.currentUser?.emailVerified);
-
-  const { userData } = useSelector(usersSelector);
-
-  console.log(verified, "verified");
-  const sendEmailVerificationLink = async (userCredentials: any) => {
-    await sendEmailVerification(userCredentials?.user);
-    setVerificationEmailSent(true);
-  };
-
-  useEffect(() => {
-    if (verificationEmailSent)
-      message.success("Verification email sent, check your indox");
-  }, [verificationEmailSent]);
 
   const handleSubmit = async (values: FormFields) => {
     const { username, email, password } = values;
@@ -58,46 +39,23 @@ const SignUpForm = ({
         message.error("Error creating user credentials.");
         return;
       }
+      const userDocRef = doc(db, "users", userCredentials?.user.uid);
 
-      sendEmailVerificationLink(userCredentials);
+      const userSnapshot = await getDoc(userDocRef);
 
-      const addUserToDB = async () => {
-        const userDocRef = doc(db, "users", userCredentials?.user.uid);
+      if (!userSnapshot.exists()) {
+        const createdAt = new Date();
 
-        const userSnapshot = await getDoc(userDocRef);
-
-        if (!userSnapshot.exists()) {
-          const createdAt = new Date();
-
-          await setDoc(userDocRef, {
-            username,
-            email,
-            createdAt,
-          });
-        }
-      };
-      // relod to get the user verificatio state
-      setInterval(() => {
-        if (!auth.currentUser?.emailVerified) {
-          return auth.currentUser?.reload().then(() => {
-            setVerified(auth.currentUser?.emailVerified);
-            if (auth.currentUser?.emailVerified && verified) {
-              addUserToDB();
-              setAccountCreated(true);
-              message.success("Account created successfully!");
-              setIsSignUpModalOpen(false);
-            }
-          });
-        } else {
-          return;
-        }
-      }, 2000);
-    } catch (error: any) {
-      if (verified) {
+        await setDoc(userDocRef, {
+          username,
+          email,
+          createdAt,
+        });
         message.success("Account created successfully!");
-      } else if (!verified) {
-        message.warning("Kindly verify first!");
-      } else if (error.code === "auth/email-already-in-use") {
+        setIsSignUpModalOpen(false);
+      }
+    } catch (error: any) {
+      if (error.code === "auth/email-already-in-use") {
         message.error("Cannot create user, email already in use");
       } else {
         console.log(error);
@@ -114,7 +72,7 @@ const SignUpForm = ({
       }
     });
     return unsubscribe;
-  }, []);
+  }, [dispatch]);
 
   const handleCancel = () => {
     setIsSignUpModalOpen(false);

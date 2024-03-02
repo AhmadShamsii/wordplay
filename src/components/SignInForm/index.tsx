@@ -53,7 +53,7 @@ const SignInForm = ({
       message.success("Signed In!");
       setIsSignInModalOpen(false);
     } catch (error: any) {
-      if (error.code === "auth/invalid-login-credentials") {
+      if (error.code === "auth/invalid-credential") {
         message.error("Invalid email or passoword!");
       } else {
         console.log(error);
