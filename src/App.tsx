@@ -10,6 +10,7 @@ import MenuPage from "./containers/MenuPage";
 import SettingsPage from "./containers/SettingsPage";
 const helmetContext = {};
 
+console.log('check check')
 function App() {
   const { userData } = useSelector(usersSelector);
 
