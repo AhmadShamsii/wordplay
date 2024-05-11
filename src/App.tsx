@@ -21,7 +21,6 @@ function App() {
   const dispatch = useDispatch();
   const { currentUser, userData } = useSelector(userSelector);
 
-  console.log('test')
   
   // this useEffect is used to set the user info
   useEffect(() => {
