@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { StyledSpace, StyledSpace2, StyledText } from "./styles";
+import { StyledArrow, StyledContainer, StyledList, StyledSpace, StyledText } from "./styles";
 import { useNavigate } from "react-router";
 import { getAuth, signOut } from "firebase/auth";
 
@@ -18,11 +18,11 @@ const MenuPage = () => {
       });
   };
 
-  // gotta chanage the route
   return (
     <StyledSpace>
-      <ArrowLeftOutlined onClick={() => navigate(-1)} />
-      <StyledSpace2>
+      <StyledContainer>
+      <StyledArrow onClick={() => navigate('/play')} />
+      <StyledList>
         <StyledText
           onClick={() => navigate("/menu/profile")}
           style={{ color: "white" }}
@@ -50,7 +50,8 @@ const MenuPage = () => {
         <StyledText style={{ color: "white" }} onClick={handleLogout}>
           Logout
         </StyledText>
-      </StyledSpace2>
+      </StyledList>
+      </StyledContainer>
     </StyledSpace>
   );
 };

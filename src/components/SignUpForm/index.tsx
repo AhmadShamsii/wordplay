@@ -8,7 +8,6 @@ import { Modal, Input, Button, Form, message } from "antd";
 import { useDispatch } from "react-redux";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../utils/firebase/firebase";
-import { setCurrentUser } from "../../containers/AuthPage/slice";
 import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
 
 interface FormFields {
@@ -64,15 +63,6 @@ const SignUpForm = ({
       setIsSignUpModalOpen(true);
     }
   };
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChangedListener((user: any) => {
-      if (user) {
-        dispatch(setCurrentUser(user));
-      }
-    });
-    return unsubscribe;
-  }, [dispatch]);
 
   const handleCancel = () => {
     setIsSignUpModalOpen(false);

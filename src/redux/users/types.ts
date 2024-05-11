@@ -1,27 +1,14 @@
-export interface Product {
-  id: number;
+interface userType {
   name: string;
-  first_name: string;
-  last_name: string;
-  usermname: string;
-  emial: string;
-  website: string;
-  quantity: number;
+  email: string;
+  country: string;
+  age: number;
 }
 
-export interface ProductsState {
-  products: {
-    productsData: Product[];
-    isLoading: boolean;
-    cart: Product[];
-    favourites: Product[];
-    iconColor: {};
-    admin: boolean;
-    monsters: Product[];
-    robots: Product[];
-    avatars: Product[];
-    roboHeads: Product[];
-    order: Product[];
-    totalOrders: Product[];
+export interface userState {
+  user: {
+    currentUser: null | {}
+    userData: null | userType
+    userStats: null | {}
   };
 }

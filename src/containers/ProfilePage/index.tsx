@@ -1,42 +1,36 @@
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { StyledSpace, StyledSpace2, StyledText } from "../MenuPage/styles";
+import {
+  StyledSpace,
+  StyledList,
+  StyledText,
+  StyledContainer,
+  StyledArrow,
+} from "../MenuPage/styles";
 import { useNavigate } from "react-router";
-
+import { Space } from "antd";
+import type { DescriptionsProps } from "antd";
+import { userSelector } from "../../redux/users/selector";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import UserInfo from "../../components/UserInfo";
 const ProfilePage = () => {
   const navigate = useNavigate();
 
   return (
     <StyledSpace>
-      <ArrowLeftOutlined
-        style={{ position: "relative", right: "88px" }}
-        onClick={() => navigate(-1)}
-      />
-      <StyledSpace2>
-        <StyledText
-          onClick={() => navigate("/menu/profile")}
-          style={{ color: "white" }}
+      <StyledContainer>
+        <Space
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+          }}
         >
-          Profile
-        </StyledText>
-        <StyledText
-          onClick={() => navigate("/menu/stats")}
-          style={{ color: "white" }}
-        >
-          Stats
-        </StyledText>
-        <StyledText
-          onClick={() => navigate("/menu/leaderboards")}
-          style={{ color: "white" }}
-        >
-          LeaderBoard
-        </StyledText>
-        <StyledText
-          onClick={() => navigate("/menu/settings")}
-          style={{ color: "white" }}
-        >
-          Settings
-        </StyledText>
-      </StyledSpace2>
+          <StyledArrow onClick={() => navigate(-1)} />
+          <StyledText style={{ color: "white" }}>Profile</StyledText>
+          <div></div>
+        </Space>
+        <UserInfo />{" "}
+      </StyledContainer>
     </StyledSpace>
   );
 };

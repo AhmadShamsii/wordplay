@@ -34,12 +34,10 @@ export const wordsSlice = createSlice({
         state.score.totalWords = state.score.totalWords + 1;
       }
 
-      console.log(action.payload.data[0].word.length, "word");
       state.words.wordsData = action.payload;
       state.words.isLoading = false;
     },
     fetchWordsError: (state, action) => {
-      console.log(action.payload);
       state.words.error = action.payload;
       state.words.isLoading = false;
     },

@@ -2,9 +2,14 @@ import { Button, Form, Input, InputNumber, Modal, Select, Space } from "antd";
 import { auth } from "../../../utils/firebase/firebase";
 import firebase from "firebase/compat/app";
 import { useState, useEffect } from "react";
-
+import { setUserData } from "../../../redux/users/slice";
+import { useDispatch, useSelector } from "react-redux";
+import { userSelector } from "../../../redux/users/selector";
 const EditSettings = ({ userData, isModalOpen, setIsModalOpen }: any) => {
+  const { currentUser } = useSelector(userSelector);
+
   const [form] = Form.useForm();
+  const dispatch = useDispatch();
 
   const [countries, setCountries] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -44,7 +49,7 @@ const EditSettings = ({ userData, isModalOpen, setIsModalOpen }: any) => {
       country: values?.country,
       age: values?.age,
     };
-    const uid = auth?.currentUser?.uid;
+    const uid = currentUser?.uid;
     const userRef = firebase.firestore().collection("users").doc(uid);
     try {
       // Get the current user data
@@ -54,6 +59,13 @@ const EditSettings = ({ userData, isModalOpen, setIsModalOpen }: any) => {
         await userRef.update({ userInfo: userInfo });
         console.log("User data updated successfully");
         setIsModalOpen(false);
+        const data = {
+          name: userInfo?.name,
+          email: currentUser?.email,
+          country: userInfo?.country,
+          age: userInfo?.age,
+        };
+        dispatch(setUserData(data));      
       } else {
         console.log("User not found");
       }

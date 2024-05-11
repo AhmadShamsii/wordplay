@@ -24,19 +24,17 @@ import {
   scoreSelector,
   timeSelector,
 } from "../../redux/words/selector";
-import { usersSelector } from "../AuthPage/selectors";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import { useNavigate } from "react-router";
-import { auth } from "../../utils/firebase/firebase";
+import { userSelector } from "../../redux/users/selector";
+import { setUserStats } from "../../redux/users/slice";
 
 const GamePage = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const { userData } = useSelector(usersSelector);
-  const currentUser = auth?.currentUser;
-  console.log(currentUser, "currentuser");
-  console.log(userData, "userData");
+  const { currentUser } = useSelector(userSelector);
+
   const dispatch = useDispatch();
   const { wordsData, error } = useSelector(wordsSelector);
   const { points, totalWords } = useSelector(scoreSelector);
@@ -129,13 +127,14 @@ const GamePage = () => {
       bestTotalWords: bestTotalWords,
       bestTotalPoints: bestPoints,
     };
-    console.log(stats, "stattttttttttts");
+    console.log(stats,'stats')
     try {
       // Get the current user data
       const doc = await userRef.get();
 
       if (doc.exists) {
         await userRef.update({ stats: stats });
+        dispatch(setUserStats(stats))
         console.log("User data updated successfully");
       } else {
         console.log("User not found");

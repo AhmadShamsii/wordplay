@@ -1,6 +1,3 @@
-import { useSelector } from "react-redux";
-import { usersSelector } from "../AuthPage/selectors";
-
 import {
   StyledButton,
   StyledSpace,
@@ -9,12 +6,15 @@ import {
   StyledTitle2,
 } from "./styles";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { userSelector } from "../../redux/users/selector";
+
 const HomePage = () => {
-  const { userData } = useSelector(usersSelector);
-  console.log(userData);
+  const { currentUser } = useSelector(userSelector);
+
   return (
     <StyledSpace>
-      <StyledTitle>Hello, {userData?.displayName || "Guest"}</StyledTitle>
+      <StyledTitle>Hello, {currentUser?.displayName || "Guest"}</StyledTitle>
       <StyledTitle2>Welcome to Wordplay!</StyledTitle2>
       <StyledTitle>How To Play</StyledTitle>
       <StyledText>
