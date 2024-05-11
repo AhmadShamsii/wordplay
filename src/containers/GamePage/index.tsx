@@ -33,7 +33,7 @@ import { setUserStats } from "../../redux/users/slice";
 const GamePage = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const { currentUser } = useSelector(userSelector);
+  const { currentUser, userStats } = useSelector(userSelector);
 
   const dispatch = useDispatch();
   const { wordsData, error } = useSelector(wordsSelector);
@@ -47,7 +47,6 @@ const GamePage = () => {
 
   const [gameOverMsg, setGameOverMsg] = useState("");
   const [playAgainBtn, setPlayAgainButton] = useState(false);
-  const [games, setGames] = useState<number>(1);
   const [usedWords, setUsedWords] = useState<string[]>([]);
   const ref = useRef<any>(null);
 
@@ -102,41 +101,47 @@ const GamePage = () => {
 
     // dispatch(setTimeEnd(false));
   };
+  console.log(userStats, "userStats");
+  // console.log(points, "points");
+  // console.log(totalWords, "totalWords");
+
   // Function to update user data in Firestore
   const updateUserData = async () => {
-    const scoreData = {
-      totalGames: 0,
-      totalWords: 0,
-      points: 0,
-      bestTotalWords: 0,
-      bestPoints: 0,
-    };
-    setGames((prevGames) => prevGames + 1);
-    const newTotalWordsValue = scoreData.totalWords + totalWords;
-    const newPointsValue = scoreData.points + points;
-
-    const bestTotalWords = Math.max(scoreData.bestTotalWords, totalWords);
-    const bestPoints = Math.max(scoreData.bestPoints, points);
+    // const scoreData = {
+    //    : 0,
+    //   totalWords: 0,
+    //   points: 0,
+    //   bestTotalWords: 0,
+    //   bestPoints: 0,
+    // };
+    // console.log(userStats, "userStats");
+    // setGames((prevGames) => prevGames + 1);
+    // const newTotalWordsValue = userStats?.totalWords + totalWords;
+    // const newPointsValue = userStats?.points + points;
+    // const bestTotalWords = Math.max(userStats?.bestTotalWords, totalWords);
+    // const bestPoints = Math.max(userStats?.bestPoints, points);
 
     const uid = currentUser?.uid;
     const userRef = firebase.firestore().collection("users").doc(uid);
+
     const stats = {
-      totalGames: games,
-      totalWords: newTotalWordsValue,
-      totalPoints: newPointsValue,
-      bestTotalWords: bestTotalWords,
-      bestTotalPoints: bestPoints,
+      totalGames: userStats?.totalGames + 1,
+      totalWords: userStats?.totalGames + totalWords,
+      totalPoints: userStats?.totalGames + points,
+      bestTotalWords: Math.max(userStats?.bestTotalWords, totalWords),
+      bestPoints: Math.max(userStats?.bestPoints, points),
     };
-    console.log(games, 'games')
-    console.log(newTotalWordsValue,'newTotalWordsValue')
     console.log(stats,'stats')
+    // console.log(games, 'games')
+    // console.log(newTotalWordsValue,'newTotalWordsValue')
+    // console.log(stats,'stats')
     try {
       // Get the current user data
       const doc = await userRef.get();
 
       if (doc.exists) {
         await userRef.update({ stats: stats });
-        dispatch(setUserStats(stats))
+        // dispatch(setUserStats(stats))
         console.log("User data updated successfully");
       } else {
         console.log("User not found");
@@ -161,12 +166,6 @@ const GamePage = () => {
     form.resetFields();
     updateUserData();
   };
-
-  //profile
-  //stats
-  //leaderboard
-  //settings
-  //logout
 
   // Handler for input changes
   const handleInput = (e: any) => {
