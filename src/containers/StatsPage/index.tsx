@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyledArrow,
   StyledContainer,
@@ -11,13 +11,37 @@ import UserInfo from "../../components/UserInfo";
 import { StyledDescriptions } from "../../components/UserInfo/styles";
 import { useSelector } from "react-redux";
 import { userSelector } from "../../redux/users/selector";
+import firebase from "firebase/compat/app";
+
 const StatsPage = () => {
   const navigate = useNavigate();
+  const [userStats, setuserStats] = useState<any>(null);
+  const { currentUser } = useSelector(userSelector);
 
-  const { userStats, currentUser } = useSelector(userSelector);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userRef = firebase.firestore().collection("users").doc(currentUser?.uid);
+        const doc = await userRef.get();
+        if (doc.exists) {
+          setuserStats(doc.data()?.stats);
+        } else {
+          console.log("No such document!");
+        }
+      } catch (error) {
+        console.log("Error getting document:", error);
+      }
+    };
+
+    fetchData();
+  }, [currentUser?.uid]);
+
   const creationDate = currentUser?.metadata?.creationTime;
-  const formattedDate = new Date(creationDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
-
+  const formattedDate = new Date(creationDate).toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 
   const items: DescriptionsProps["items"] = [
     {
@@ -47,7 +71,7 @@ const StatsPage = () => {
     {
       key: "5",
       label: "Best total Points",
-      children: `${userStats?.bestTotalPoints}` || "NA",
+      children: `${userStats?.bestPoints}` || "NA",
       span: 3,
     },
     {

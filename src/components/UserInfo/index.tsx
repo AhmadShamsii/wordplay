@@ -1,10 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { userSelector } from "../../redux/users/selector";
 import { useSelector } from "react-redux";
 import { DescriptionsProps } from "antd";
 import { StyledDescriptions } from "./styles";
+import firebase from "firebase/compat/app";
+
 const UserInfo = () => {
-  const { userData, currentUser } = useSelector(userSelector);
+  const [userData, setUserData] = useState<any>(null);
+  const { currentUser } = useSelector(userSelector);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userRef = firebase
+          .firestore()
+          .collection("users")
+          .doc(currentUser?.uid);
+        const doc = await userRef.get();
+        if (doc.exists) {
+          setUserData(doc.data()?.userInfo);
+        } else {
+          console.log("No such document!");
+        }
+      } catch (error) {
+        console.log("Error getting document:", error);
+      }
+    };
+
+    fetchData();
+  }, [currentUser?.uid]);
 
   const items: DescriptionsProps["items"] = [
     {

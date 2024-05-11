@@ -15,6 +15,7 @@ import { setCurrentUser, setUserData, setUserStats } from "./redux/users/slice";
 import { userSelector } from "./redux/users/selector";
 import firebase from "firebase/compat/app";
 import StatsPage from "./containers/StatsPage";
+import LeaderBoardPage from "./containers/LeaderboardPage";
 const helmetContext = {};
 
 function App() {
@@ -50,7 +51,7 @@ function App() {
     }
 
     getUserData(currentUser?.uid);
-  }, [currentUser?.uid]);
+  }, []);
 
   // this useEffect is used to set the currentUser
   useEffect(() => {
@@ -73,6 +74,7 @@ function App() {
           <Route path="menu/profile" element={<ProfilePage />} />
           <Route path="menu/settings" element={<SettingsPage />} />
           <Route path="menu/stats" element={<StatsPage />} />
+          <Route path="menu/leaderboards" element={<LeaderBoardPage />} />
         </Routes>
       </BrowserRouter>
     </HelmetProvider>
