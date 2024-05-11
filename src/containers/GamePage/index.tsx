@@ -127,6 +127,8 @@ const GamePage = () => {
       bestTotalWords: bestTotalWords,
       bestTotalPoints: bestPoints,
     };
+    console.log(games, 'games')
+    console.log(newTotalWordsValue,'newTotalWordsValue')
     console.log(stats,'stats')
     try {
       // Get the current user data
