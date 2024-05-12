@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../utils/firebase/firebase";
 import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
+import firebase from "firebase/compat/app";
 
 interface FormFields {
   username: string;
@@ -81,7 +82,26 @@ const SignUpForm = ({
     }
     return Promise.resolve();
   };
+  // function for username validation
+  const checkUsername = async (rule: any, value: any) => {
+    try {
+      const usersRef = firebase.firestore().collection("users");
+      const snapshot = await usersRef.get();
+      const usersData: any = [];
+      snapshot.forEach((doc) => {
+        usersData.push({ id: doc.id, ...doc.data() });
+      });
 
+      if (value?.length < 3) {
+        throw new Error("Username should be atleast 3 letters");
+      }
+      if (value?.length > 3 && usersData.some((user: any) => user?.username === value)) {
+          throw new Error("Username is already taken");
+      }
+    } catch (error: any) {
+      throw new Error(error?.message);
+    }
+  };
   return (
     <Modal
       title="Sign Up "
@@ -114,6 +134,7 @@ const SignUpForm = ({
                 required: true,
                 message: "Please input your username",
               },
+              { validator: checkUsername },
             ]}
             style={{
               display: "inline-block",
