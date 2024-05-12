@@ -24,6 +24,13 @@ const MenuPage = () => {
       });
   };
 
+  const MenuItemsForUsers = () => {
+    return <h1>user</h1>;
+  };
+
+  const MenuItemsForGuests = () => {
+    return <h1>guests</h1>;
+  };
   return (
     <StyledSpace>
       <StyledContainer>
