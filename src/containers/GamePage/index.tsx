@@ -180,6 +180,7 @@ const GamePage = () => {
     }
   }, [isTimeEnd]);
 
+  console.log('check')
   return (
     <StyledSpace>
       <Space>
