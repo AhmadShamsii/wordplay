@@ -95,8 +95,11 @@ const SignUpForm = ({
       if (value?.length < 3) {
         throw new Error("Username should be atleast 3 letters");
       }
-      if (value?.length > 3 && usersData.some((user: any) => user?.username === value)) {
-          throw new Error("Username is already taken");
+      if (
+        value?.length > 3 &&
+        usersData.some((user: any) => user?.username === value)
+      ) {
+        throw new Error("Username is already taken");
       }
     } catch (error: any) {
       throw new Error(error?.message);

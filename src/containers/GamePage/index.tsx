@@ -1,5 +1,5 @@
 import { Avatar, Form, Input, Space } from "antd";
-import { StyledTitle } from "../HomePage/styles";
+import { StyledTitle } from "./styles";
 import {
   StyledSpace,
   StyledSpace2,
@@ -29,6 +29,7 @@ import "firebase/compat/firestore";
 import { useNavigate } from "react-router";
 import { userSelector } from "../../redux/users/selector";
 import { setUserStats } from "../../redux/users/slice";
+import { UserOutlined } from "@ant-design/icons";
 
 const GamePage = () => {
   const [form] = Form.useForm();
@@ -186,15 +187,9 @@ const GamePage = () => {
         {!currentUser?.isAnonymous && (
           <Avatar
             onClick={() => navigate("/menu")}
-            style={{
-              backgroundColor: "#1890ff",
-              verticalAlign: "middle",
-              cursor: "pointer",
-            }}
+            icon={<UserOutlined />}
             size="large"
-          >
-            AS
-          </Avatar>
+          />
         )}
       </Space>
       {showCountdown && (

@@ -32,3 +32,8 @@ export const StyledMessage = styled.p`
   font-size: 16px;
   font-weight: bold;
 `;
+export const StyledTitle = styled.h1`
+  font-family: "Croissant One", cursive;
+  color: #ebf2fa;
+  font-size: 30px;
+`;

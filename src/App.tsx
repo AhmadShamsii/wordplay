@@ -1,7 +1,6 @@
 import { useSelector } from "react-redux";
 import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
 import AuthPage from "./containers/AuthPage";
-import HomePage from "./containers/HomePage";
 import GamePage from "./containers/GamePage";
 import { HelmetProvider } from "react-helmet-async";
 import ProfilePage from "./containers/ProfilePage";
@@ -16,6 +15,7 @@ import { userSelector } from "./redux/users/selector";
 import firebase from "firebase/compat/app";
 import StatsPage from "./containers/StatsPage";
 import LeaderBoardPage from "./containers/LeaderboardPage";
+import HowToPlayPage from "./containers/HowToPlayPage";
 const helmetContext = {};
 
 function App() {
@@ -68,13 +68,13 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route index path="/" element={<AuthPage />} />
-          <Route path="home" element={<HomePage />} />
           <Route path="play" element={<GamePage />} />
           <Route path="menu" element={<MenuPage />} />
           <Route path="menu/profile" element={<ProfilePage />} />
-          <Route path="menu/settings" element={<SettingsPage />} />
           <Route path="menu/stats" element={<StatsPage />} />
+          <Route path="menu/how-to-play" element={<HowToPlayPage />} />
           <Route path="menu/leaderboards" element={<LeaderBoardPage />} />
+          <Route path="menu/settings" element={<SettingsPage />} />
         </Routes>
       </BrowserRouter>
     </HelmetProvider>

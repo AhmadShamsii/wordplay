@@ -25,7 +25,7 @@ const AuthPage = () => {
     const auth = getAuth();
     signInAnonymously(auth)
       .then(() => {
-        navigate("home");
+        navigate("/play");
         message.success("Welcome!");
       })
       .catch((error) => {

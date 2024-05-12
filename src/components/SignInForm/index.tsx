@@ -32,7 +32,7 @@ const SignInForm = ({
     await signInWithGooglePopup();
     message.success("Signed In!");
     setIsSignInModalOpen(false);
-    navigate("home");
+    navigate("/play");
   };
 
   const handleSubmit = async (values: any) => {
@@ -49,7 +49,7 @@ const SignInForm = ({
           });
       }
       await signInAuthUserWithEmailAndPassword(email, password);
-      navigate("home");
+      navigate("/play");
       message.success("Signed In!");
       setIsSignInModalOpen(false);
     } catch (error: any) {
