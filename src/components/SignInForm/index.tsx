@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   signInWithGooglePopup,
   signInAuthUserWithEmailAndPassword,
@@ -9,29 +9,29 @@ import { Button, Checkbox, Divider, Form, Input, Modal, message } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { GoogleOutlined } from "@ant-design/icons";
 import {
-  Persistence,
   setPersistence,
-  browserLocalPersistence,
   sendPasswordResetEmail,
   getAuth,
   browserSessionPersistence,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-
-const SignInForm = ({
-  isSignInModalOpen,
+import {
   setIsSignInModalOpen,
-  showSignUpModal,
-}: any) => {
-  const navigate = useNavigate();
+  setIsSignUpModalOpen,
+} from "../../redux/appManager/slice";
+import { appManagerSelector } from "../../redux/appManager/selectors";
 
+const SignInForm = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isSignInModalOpen } = useSelector(appManagerSelector);
   const [rememberMe, setRememberMe] = useState(true);
   const [isForgotPass, setIsForgotPass] = useState(false);
 
   const signInWithGoogle = async () => {
     await signInWithGooglePopup();
     message.success("Signed In!");
-    setIsSignInModalOpen(false);
+    dispatch(setIsSignInModalOpen(false));
     navigate("/play");
   };
 
@@ -51,7 +51,7 @@ const SignInForm = ({
       await signInAuthUserWithEmailAndPassword(email, password);
       navigate("/play");
       message.success("Signed In!");
-      setIsSignInModalOpen(false);
+      dispatch(setIsSignInModalOpen(false));
     } catch (error: any) {
       if (error.code === "auth/invalid-credential") {
         message.error("Invalid email or passoword!");
@@ -59,17 +59,17 @@ const SignInForm = ({
         console.log(error);
         message.error("Error logging in!");
       }
-      setIsSignInModalOpen(true);
+      dispatch(setIsSignInModalOpen(false));
     }
   };
 
   const handleCancel = () => {
-    setIsSignInModalOpen(false);
+    dispatch(setIsSignInModalOpen(false));
   };
 
   const handleRegister = () => {
-    showSignUpModal();
-    setIsSignInModalOpen(false);
+    dispatch(setIsSignUpModalOpen(true));
+    dispatch(setIsSignInModalOpen(false));
   };
 
   const showForgotPassModal = () => {

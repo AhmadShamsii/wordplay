@@ -8,9 +8,20 @@ import {
 } from "./styles";
 import { useNavigate } from "react-router";
 import { getAuth, signOut } from "firebase/auth";
+import { setIsSignInModalOpen } from "../../redux/appManager/slice";
+import { useDispatch, useSelector } from "react-redux";
+import { userSelector } from "../../redux/users/selector";
+import { Modal } from "antd";
+import { appManagerSelector } from "../../redux/appManager/selectors";
+import SignInForm from "../../components/SignInForm";
+import SignUpForm from "../../components/SignUpForm";
 
 const MenuPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isSignInModalOpen } = useSelector(appManagerSelector);
+
+  const { currentUser } = useSelector(userSelector);
 
   const handleLogout = async () => {
     const auth = getAuth();
@@ -25,51 +36,74 @@ const MenuPage = () => {
   };
 
   const MenuItemsForUsers = () => {
-    return <h1>user</h1>;
+    return (
+      <StyledList>
+        <StyledText
+          onClick={() => navigate("/menu/profile")}
+          style={{ color: "white" }}
+        >
+          Profile
+        </StyledText>
+        <StyledText
+          onClick={() => navigate("/menu/stats")}
+          style={{ color: "white" }}
+        >
+          Stats
+        </StyledText>
+        <StyledText
+          onClick={() => navigate("/menu/how-to-play")}
+          style={{ color: "white" }}
+        >
+          How to Play
+        </StyledText>
+        <StyledText
+          onClick={() => navigate("/menu/leaderboards")}
+          style={{ color: "white" }}
+        >
+          LeaderBoard
+        </StyledText>
+        <StyledText
+          onClick={() => navigate("/menu/settings")}
+          style={{ color: "white" }}
+        >
+          Settings
+        </StyledText>
+        <StyledText style={{ color: "white" }} onClick={handleLogout}>
+          Logout
+        </StyledText>
+      </StyledList>
+    );
   };
 
   const MenuItemsForGuests = () => {
-    return <h1>guests</h1>;
+    return (
+      <StyledList>
+        <StyledText
+          onClick={() => dispatch(setIsSignInModalOpen(true))}
+          style={{ color: "white" }}
+        >
+          Sign In
+        </StyledText>
+        <SignInForm />
+        <SignUpForm />
+        <StyledText
+          onClick={() => navigate("/menu/how-to-play")}
+          style={{ color: "white" }}
+        >
+          How to Play
+        </StyledText>
+      </StyledList>
+    );
   };
   return (
     <StyledSpace>
       <StyledContainer>
         <StyledArrow onClick={() => navigate("/play")} />
-        <StyledList>
-          <StyledText
-            onClick={() => navigate("/menu/profile")}
-            style={{ color: "white" }}
-          >
-            Profile
-          </StyledText>
-          <StyledText
-            onClick={() => navigate("/menu/stats")}
-            style={{ color: "white" }}
-          >
-            Stats
-          </StyledText>
-          <StyledText
-            onClick={() => navigate("/menu/how-to-play")}
-            style={{ color: "white" }}
-          >
-            How to Play
-          </StyledText>
-          <StyledText
-            onClick={() => navigate("/menu/leaderboards")}
-            style={{ color: "white" }}
-          >
-            LeaderBoard
-          </StyledText>
-          <StyledText
-            onClick={() => navigate("/menu/settings")}
-            style={{ color: "white" }}
-          >
-            Settings
-          </StyledText>
-          <StyledText style={{ color: "white" }} onClick={handleLogout}>
-            Logout
-          </StyledText>
-        </StyledList>
+        {currentUser?.isAnonymous ? (
+          <MenuItemsForGuests />
+        ) : (
+          <MenuItemsForUsers />
+        )}
       </StyledContainer>
     </StyledSpace>
   );

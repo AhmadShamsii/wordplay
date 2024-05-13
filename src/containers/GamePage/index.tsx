@@ -179,19 +179,16 @@ const GamePage = () => {
       handleGameOver();
     }
   }, [isTimeEnd]);
-
-  console.log('check')
   return (
     <StyledSpace>
       <Space>
         <StyledTitle>Wordplay</StyledTitle>
-        {!currentUser?.isAnonymous && (
           <Avatar
             onClick={() => navigate("/menu")}
             icon={<UserOutlined />}
             size="large"
           />
-        )}
+       
       </Space>
       {showCountdown && (
         <Countdown startFrom={3} onCountdownEnd={handleGameStart} />

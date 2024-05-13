@@ -3,22 +3,22 @@ import SignInForm from "../../components/SignInForm";
 import SignUpForm from "../../components/SignUpForm";
 import { StyledButtons, StyledSpace, StyledText, StyledTitle } from "./styles";
 import ConsoleSvg from "./../../utils/assets/console.svg";
-import { useState } from "react";
 import { getAuth, signInAnonymously } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../../utils/firebase/firebase";
+import { useDispatch } from "react-redux";
+import {
+  setIsSignInModalOpen,
+  setIsSignUpModalOpen,
+} from "../../redux/appManager/slice";
 
 const AuthPage = () => {
   const navigate = useNavigate();
-
-  const [isSignInModalOpen, setIsSignInModalOpen] = useState<Boolean>(false);
-  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState<Boolean>(false);
-
+  const dispatch = useDispatch();
   const showSignInModal = () => {
-    setIsSignInModalOpen(true);
+    dispatch(setIsSignInModalOpen(true));
   };
   const showSignUpModal = () => {
-    setIsSignUpModalOpen(true);
+    dispatch(setIsSignUpModalOpen(true));
   };
 
   const handleAnonymousSignIn = () => {
@@ -52,16 +52,8 @@ const AuthPage = () => {
       >
         Continue as Guest
       </Button>
-      <SignInForm
-        isSignInModalOpen={isSignInModalOpen}
-        setIsSignInModalOpen={setIsSignInModalOpen}
-        showSignUpModal={showSignUpModal}
-      />
-      <SignUpForm
-        isSignUpModalOpen={isSignUpModalOpen}
-        setIsSignUpModalOpen={setIsSignUpModalOpen}
-        showSignInModal={showSignInModal}
-      />
+      <SignInForm />
+      <SignUpForm />
     </StyledSpace>
   );
 };

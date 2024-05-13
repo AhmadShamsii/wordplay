@@ -1,15 +1,15 @@
-import { useEffect } from "react";
 
 import {
   createAuthUserWithEmailAndPassword,
-  onAuthStateChangedListener,
 } from "../../utils/firebase/firebase";
 import { Modal, Input, Button, Form, message } from "antd";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../utils/firebase/firebase";
 import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
 import firebase from "firebase/compat/app";
+import { setIsSignInModalOpen, setIsSignUpModalOpen } from "../../redux/appManager/slice";
+import { appManagerSelector } from "../../redux/appManager/selectors";
 
 interface FormFields {
   username: string;
@@ -18,13 +18,10 @@ interface FormFields {
   confirmPassword: string;
 }
 
-const SignUpForm = ({
-  isSignUpModalOpen,
-  setIsSignUpModalOpen,
-  showSignInModal,
-}: any) => {
+const SignUpForm = () => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
+  const { isSignUpModalOpen } = useSelector(appManagerSelector);
 
   const handleSubmit = async (values: FormFields) => {
     const { username, email, password } = values;
@@ -52,7 +49,7 @@ const SignUpForm = ({
           createdAt,
         });
         message.success("Account created successfully!");
-        setIsSignUpModalOpen(false);
+        dispatch(setIsSignUpModalOpen(false));
       }
     } catch (error: any) {
       if (error.code === "auth/email-already-in-use") {
@@ -61,17 +58,17 @@ const SignUpForm = ({
         console.log(error);
         message.error("Error creating account!");
       }
-      setIsSignUpModalOpen(true);
+        dispatch(setIsSignUpModalOpen(true));
     }
   };
 
   const handleCancel = () => {
-    setIsSignUpModalOpen(false);
+    dispatch(setIsSignUpModalOpen(false));
   };
 
   const handleSignIn = () => {
-    showSignInModal();
-    setIsSignUpModalOpen(false);
+    dispatch(setIsSignInModalOpen(true));
+    dispatch(setIsSignUpModalOpen(false));
   };
 
   const validatePassword = (_: any, value: any) => {
