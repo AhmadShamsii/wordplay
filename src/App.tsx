@@ -31,7 +31,6 @@ function App() {
         const snapshot = await docRef.get();
         if (snapshot.exists) {
           const user = snapshot.data();
-          console.log(user, "user");
           const data = {
             name: user?.userInfo?.name,
             email: currentUser?.email,
@@ -39,9 +38,9 @@ function App() {
             age: user?.userInfo?.age,
           };
           dispatch(setUserData(data));
-          if(user?.stats){
-            dispatch(setUserStats(user?.stats))
-          }
+          // if(user?.stats){
+            // dispatch(setUserStats(user?.stats))
+          // }
         } else {
           console.log("No user document found with the provided ID");
         }

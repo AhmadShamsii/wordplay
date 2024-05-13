@@ -5,9 +5,6 @@ import axios from "axios";
 function* workGetWordsFetch({ payload }: any): any {
   const { word, letter } = payload;
   try {
-    // if (usedWords.includes(word)) {
-    //   throw new Error("This word has already been used!");
-    // } else
     if (!word.startsWith(letter)) {
       throw new Error(`Entered word doesnot starts with ${letter}!`);
     } else {

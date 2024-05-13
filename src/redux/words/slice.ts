@@ -27,28 +27,27 @@ export const wordsSlice = createSlice({
     fetchWordsRequest: (state) => {
       state.words.isLoading = true;
     },
-    fetchWordsSuccess: (state, action) => {
+    fetchWordsSuccess: (state, { payload }) => {
       if (!state.time.isTimeEnd) {
-        state.score.points =
-          state.score.points + action.payload.data[0].word.length;
+        state.score.points = state.score.points + payload?.data[0].word.length;
         state.score.totalWords = state.score.totalWords + 1;
       }
-
-      state.words.wordsData = action.payload;
+      
+      state.words.wordsData = payload;
       state.words.isLoading = false;
     },
-    fetchWordsError: (state, action) => {
-      state.words.error = action.payload;
+    fetchWordsError: (state, {payload}) => {
+      state.words.error = payload;
       state.words.isLoading = false;
     },
-    setTimeStart: (state, action) => {
-      state.time.isTimeStart = action.payload;
+    setTimeStart: (state, {payload}) => {
+      state.time.isTimeStart = payload;
     },
-    setTimeEnd: (state, action) => {
-      state.time.isTimeEnd = action.payload;
+    setTimeEnd: (state, {payload}) => {
+      state.time.isTimeEnd = payload;
     },
-    settingRandomLetter: (state, action) => {
-      state.randomLetter = action.payload;
+    settingRandomLetter: (state, {payload}) => {
+      state.randomLetter = payload;
     },
     clearErrorMsg: (state) => {
       state.words.error = "";
@@ -56,7 +55,7 @@ export const wordsSlice = createSlice({
     clearScore: (state) => {
       state.score.points = 0;
       state.score.totalWords = 0;
-    }
+    },
   },
 });
 
@@ -68,6 +67,6 @@ export const {
   setTimeEnd,
   clearErrorMsg,
   settingRandomLetter,
-  clearScore
+  clearScore,
 } = wordsSlice.actions;
 export default wordsSlice.reducer;

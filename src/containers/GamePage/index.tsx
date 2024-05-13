@@ -17,6 +17,7 @@ import {
   setTimeEnd,
   clearScore,
   settingRandomLetter,
+  fetchWordsSuccess,
 } from "../../redux/words/slice";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -59,14 +60,20 @@ const GamePage = () => {
     setRandomLetter(randLetter);
   };
 
+  useEffect(() => {
+    // dispatch(fetchWordsSuccess(null));
+    dispatch(clearScore());
+    setRandomLetter("");
+  }, []);
+
   // Effect to initialize random alphabet when wordsData changes
   useEffect(() => {
     if (wordsData) {
       getRandomAlphabet();
       dispatch(settingRandomLetter(randomLetter));
     }
-  }, [wordsData, dispatch]);
-
+  }, [wordsData]);
+  console.log(wordsData, "wordsData");
   // focus when game starts
   useEffect(() => {
     ref.current.focus();
@@ -100,25 +107,39 @@ const GamePage = () => {
     setGameOverMsg("");
     dispatch(clearScore());
   };
-  console.log(userStats, "userStats");
+
   const updateUserData = async () => {
     const uid = currentUser?.uid;
     const userRef = firebase.firestore().collection("users").doc(uid);
 
-    const stats = {
-      totalGames: userStats?.totalGames + 1,
-      totalWords: userStats?.totalGames + totalWords,
-      totalPoints: userStats?.totalGames + points,
-      bestTotalWords: Math.max(userStats?.bestTotalWords, totalWords),
-      bestPoints: Math.max(userStats?.bestPoints, points),
-    };
     try {
       // Get the current user data
       const doc = await userRef.get();
 
       if (doc.exists) {
+        const users = doc?.data();
+
+        const stats = users?.stats
+          ? {
+              totalGames: users?.stats?.totalGames + 1,
+              totalWords: users?.stats?.totalWords + totalWords,
+              totalPoints: users?.stats?.totalPoints + points,
+              bestTotalWords: Math.max(
+                users?.stats?.bestTotalWords,
+                totalWords
+              ),
+              bestPoints: Math.max(users?.stats?.bestPoints, points),
+            }
+          : {
+              totalGames: 1,
+              totalWords: totalWords,
+              totalPoints: points,
+              bestTotalWords: totalWords,
+              bestPoints: points,
+            };
+
         await userRef.update({ stats: stats });
-        dispatch(setUserStats(stats));
+        // dispatch(setUserStats(stats));
         console.log("User data updated successfully");
       } else {
         console.log("User not found");
@@ -183,12 +204,11 @@ const GamePage = () => {
     <StyledSpace>
       <Space>
         <StyledTitle>Wordplay</StyledTitle>
-          <Avatar
-            onClick={() => navigate("/menu")}
-            icon={<UserOutlined />}
-            size="large"
-          />
-       
+        <Avatar
+          onClick={() => navigate("/menu")}
+          icon={<UserOutlined />}
+          size="large"
+        />
       </Space>
       {showCountdown && (
         <Countdown startFrom={3} onCountdownEnd={handleGameStart} />

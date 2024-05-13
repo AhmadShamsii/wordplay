@@ -14,8 +14,15 @@ import { userSelector } from "../../redux/users/selector";
 import firebase from "firebase/compat/app";
 
 const StatsPage = () => {
+  const statsInitialState = {
+    totalGames: 0,
+    totalPoints: 0,
+    totalWords: 0,
+    bestPoints: 0,
+    bestTotalWords: 0,
+  }
   const navigate = useNavigate();
-  const [userStats, setuserStats] = useState<any>(null);
+  const [userStats, setuserStats] = useState<any>(statsInitialState);
   const { currentUser } = useSelector(userSelector);
 
   useEffect(() => {

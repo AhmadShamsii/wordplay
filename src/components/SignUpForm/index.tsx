@@ -1,15 +1,16 @@
-
-import {
-  createAuthUserWithEmailAndPassword,
-} from "../../utils/firebase/firebase";
+import { createAuthUserWithEmailAndPassword } from "../../utils/firebase/firebase";
 import { Modal, Input, Button, Form, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../utils/firebase/firebase";
 import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
 import firebase from "firebase/compat/app";
-import { setIsSignInModalOpen, setIsSignUpModalOpen } from "../../redux/appManager/slice";
+import {
+  setIsSignInModalOpen,
+  setIsSignUpModalOpen,
+} from "../../redux/appManager/slice";
 import { appManagerSelector } from "../../redux/appManager/selectors";
+import { useNavigate } from "react-router";
 
 interface FormFields {
   username: string;
@@ -20,6 +21,7 @@ interface FormFields {
 
 const SignUpForm = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const [form] = Form.useForm();
   const { isSignUpModalOpen } = useSelector(appManagerSelector);
 
@@ -48,6 +50,7 @@ const SignUpForm = () => {
           email,
           createdAt,
         });
+        navigate("/play");
         message.success("Account created successfully!");
         dispatch(setIsSignUpModalOpen(false));
       }
@@ -58,7 +61,7 @@ const SignUpForm = () => {
         console.log(error);
         message.error("Error creating account!");
       }
-        dispatch(setIsSignUpModalOpen(true));
+      dispatch(setIsSignUpModalOpen(true));
     }
   };
 
@@ -93,7 +96,7 @@ const SignUpForm = () => {
         throw new Error("Username should be atleast 3 letters");
       }
       if (
-        value?.length > 3 &&
+        value?.length >= 3 &&
         usersData.some((user: any) => user?.username === value)
       ) {
         throw new Error("Username is already taken");
