@@ -47,6 +47,7 @@ export const wordsSlice = createSlice({
       state.time.isTimeEnd = payload;
     },
     settingRandomLetter: (state, {payload}) => {
+      console.log(payload,'asdasd')
       state.randomLetter = payload;
     },
     clearErrorMsg: (state) => {
