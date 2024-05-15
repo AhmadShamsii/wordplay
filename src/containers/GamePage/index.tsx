@@ -60,21 +60,23 @@ const GamePage = () => {
     setRandomLetter(randLetter);
   };
 
+// clear the score and random letter when component mounts
   useEffect(() => {
-    dispatch(fetchWordsSuccess(null));
-    dispatch(clearScore());
-    setRandomLetter("");
+    return () => {
+      dispatch(clearScore());
+      setRandomLetter("");
+    };
   }, []);
-
 
   // Effect to initialize random alphabet when wordsData changes
   useEffect(() => {
-    if (wordsData) {
+    if (randomLetter) {
       getRandomAlphabet();
       dispatch(settingRandomLetter(randomLetter));
     }
   }, [wordsData]);
   console.log(wordsData, "wordsData");
+  console.log(randomLetter, "randomletter");
   // focus when game starts
   useEffect(() => {
     ref.current.focus();
@@ -141,7 +143,7 @@ const GamePage = () => {
 
         await userRef.update({ stats: stats });
         console.log("User data updated successfully");
-      } else { 
+      } else {
         console.log("User not found");
       }
     } catch (error) {
@@ -171,7 +173,6 @@ const GamePage = () => {
       word: e.target.value.toLowerCase(),
       letter: randomLetter.toLowerCase(),
     };
-    console.log(payload, "payload");
     if (!isTimeEnd) {
       setUsedWords((prevWords) => [...prevWords, payload.word]);
       if (usedWords.includes(payload.word)) setGameOverMsg("already used");
