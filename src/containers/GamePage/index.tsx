@@ -60,6 +60,8 @@ const GamePage = () => {
     setRandomLetter(randLetter);
   };
 
+  console.log('do protetive routing')
+
 // clear the score and random letter when component mounts
   useEffect(() => {
     return () => {
