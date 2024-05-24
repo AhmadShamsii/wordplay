@@ -1,8 +1,8 @@
 ![alt_text](https://img.shields.io/badge/npm-v20.9.0-blue) ![alt_text](https://img.shields.io/badge/react-v18.2.22-yw)
 ![alt_text](https://img.shields.io/badge/firebase-v10.7.1-blue) ![alt_text](https://img.shields.io/badge/antd-v5.12.8-yw)
-![alt_text](https://img.shields.io/badge/styled-components-v6.0.8-blue)
+![alt_text](https://img.shields.io/badge/styledComponents-v6.0.8-blue)
 
-# Monstarz
+# Webplay
 
 ## Overview
 
@@ -12,7 +12,7 @@ Webplay is a simple, fun to play web game.
 
 You will see random letters on your screen. Write the first word that
 comes to your mind that starts with that letter. You will have 5
-seconds to write a word, after that another word pops up and do the
+seconds to write a word, after that another letter pops up and do the
 same. You can't repeat a word and the game ends when you failed to
 write a word in the time limit. Ready to play? Have fun!
 
