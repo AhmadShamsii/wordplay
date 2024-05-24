@@ -1,7 +1,4 @@
-import {
-  createAuthUserWithEmailAndPassword,
-  signInWithGooglePopup,
-} from "../../utils/firebase/firebase";
+import { createAuthUserWithEmailAndPassword } from "../../utils/firebase/firebase";
 import { Modal, Input, Button, Form, message, Divider } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { doc, getDoc, setDoc } from "firebase/firestore";
@@ -246,7 +243,7 @@ const SignUpForm = () => {
         type="primary"
         style={{ width: "100%" }}
         icon={<GoogleOutlined />}
-        onClick={signInWithGoogle}
+        onClick={() => signInWithGoogle({ dispatch, navigate })}
       >
         Sign Up with Google!
       </Button>

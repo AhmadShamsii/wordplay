@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  signInWithGooglePopup,
   signInAuthUserWithEmailAndPassword,
   auth,
 } from "../../utils/firebase/firebase";
@@ -226,9 +225,9 @@ const SignInForm = () => {
           type="primary"
           style={{ width: "100%" }}
           icon={<GoogleOutlined />}
-          onClick={signInWithGoogle}
+          onClick={() => signInWithGoogle({dispatch, navigate})}
         >
-          Sign in with Google!
+          Sign in with Google!s
         </Button>
       </Modal>
     </>
