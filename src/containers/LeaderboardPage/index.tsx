@@ -8,8 +8,7 @@ import {
   StyledSpace,
   StyledText,
 } from "../MenuPage/styles";
-import { DescriptionsProps, List, Space } from "antd";
-import { StyledDescriptions } from "../../components/UserInfo/styles";
+import {  List, Space } from "antd";
 import { useNavigate } from "react-router";
 const LeaderBoardPage = () => {
   const { currentUser } = useSelector(userSelector);
@@ -44,8 +43,6 @@ const LeaderBoardPage = () => {
     fetchData();
   }, [currentUser?.uid]);
 
-
-  console.log(topUsers, "aa");
   return (
     <StyledSpace>
       <StyledContainer>

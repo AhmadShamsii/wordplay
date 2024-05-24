@@ -42,7 +42,7 @@ const SignInForm = () => {
         const auth = getAuth();
         setPersistence(auth, browserSessionPersistence)
           .then(() => {
-            console.log("yes");
+            ("yes");
           })
           .catch((error) => {
             console.log(error);

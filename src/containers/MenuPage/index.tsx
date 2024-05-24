@@ -1,4 +1,3 @@
-import { ArrowLeftOutlined } from "@ant-design/icons";
 import {
   StyledArrow,
   StyledContainer,
@@ -11,15 +10,12 @@ import { getAuth, signOut } from "firebase/auth";
 import { setIsSignInModalOpen } from "../../redux/appManager/slice";
 import { useDispatch, useSelector } from "react-redux";
 import { userSelector } from "../../redux/users/selector";
-import { Modal } from "antd";
-import { appManagerSelector } from "../../redux/appManager/selectors";
 import SignInForm from "../../components/SignInForm";
 import SignUpForm from "../../components/SignUpForm";
 
 const MenuPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isSignInModalOpen } = useSelector(appManagerSelector);
 
   const { currentUser } = useSelector(userSelector);
 
@@ -28,7 +24,6 @@ const MenuPage = () => {
     signOut(auth)
       .then(() => {
         navigate("/");
-        console.log("Sign-out successful.");
       })
       .catch((error) => {
         // An error happened.

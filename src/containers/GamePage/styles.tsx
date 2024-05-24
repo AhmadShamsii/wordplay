@@ -1,8 +1,15 @@
 import styled from "styled-components";
-import { Button, Card } from "antd";
+import { Button } from "antd";
 export const StyledSpace = styled.div`
   text-align: center;
-  margin: 5% 40% 0 40%;
+  width: 300px;
+  height: 200px;
+  padding: 20px;  
+  margin-top: 150px;
+  position: relative;
+  top: 0%;
+  left: 50%;
+  transform: translate(-50%,-50%);
 `;
 export const StyledLetter = styled.h1`
   color: #ebf2fa;

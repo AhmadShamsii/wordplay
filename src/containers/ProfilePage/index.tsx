@@ -1,17 +1,11 @@
-import { ArrowLeftOutlined } from "@ant-design/icons";
 import {
   StyledSpace,
-  StyledList,
   StyledText,
   StyledContainer,
   StyledArrow,
 } from "../MenuPage/styles";
 import { useNavigate } from "react-router";
 import { Space } from "antd";
-import type { DescriptionsProps } from "antd";
-import { userSelector } from "../../redux/users/selector";
-import { useSelector } from "react-redux";
-import { useEffect } from "react";
 import UserInfo from "../../components/UserInfo";
 const ProfilePage = () => {
   const navigate = useNavigate();

@@ -117,9 +117,7 @@ const SignUpForm = () => {
   const signInWithGoogle = async () => {
     const result = await signInWithGooglePopup();
     const user = result?.user;
-    console.log(user, "user");
     const userRef = doc(db, "users", user?.uid);
-    console.log(userRef, "ref");
     await setDoc(userRef, {
       email: user?.email,
       username: user?.displayName,

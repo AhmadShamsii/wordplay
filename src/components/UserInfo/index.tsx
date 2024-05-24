@@ -19,9 +19,7 @@ const UserInfo = () => {
         const doc = await userRef.get();
         if (doc.exists) {
           setUserData(doc.data()?.userInfo);
-        } else {
-          console.log("No such document!");
-        }
+        } 
       } catch (error) {
         console.log("Error getting document:", error);
       }

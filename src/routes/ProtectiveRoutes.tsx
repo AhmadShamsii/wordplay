@@ -8,6 +8,7 @@ import StatsPage from './../containers/StatsPage';
 import HowToPlayPage from './../containers/HowToPlayPage';
 import LeaderBoardPage from './../containers/LeaderboardPage';
 import ProtectedRoute from './ProtectiveRoute';
+import SettingsPage from '../containers/SettingsPage';
 
 const ProtectedRoutes: React.FC = () => (
   <Routes>
@@ -17,6 +18,7 @@ const ProtectedRoutes: React.FC = () => (
     <Route path="menu/stats" element={<ProtectedRoute><StatsPage /></ProtectedRoute>} />
     <Route path="menu/how-to-play" element={<ProtectedRoute><HowToPlayPage /></ProtectedRoute>} />
     <Route path="menu/leaderboards" element={<ProtectedRoute><LeaderBoardPage /></ProtectedRoute>} />
+    <Route path="menu/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
   </Routes>
 );
 

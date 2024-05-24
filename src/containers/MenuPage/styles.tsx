@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { Button, Typography } from "antd";
+import {Typography } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-const { Text, Link } = Typography;
+const {  Link } = Typography;
 
 export const StyledSpace = styled.div`
   display: flex;

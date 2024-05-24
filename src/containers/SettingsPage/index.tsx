@@ -1,4 +1,4 @@
-import { ArrowLeftOutlined, EditOutlined } from "@ant-design/icons";
+import {  EditOutlined } from "@ant-design/icons";
 import {
   StyledArrow,
   StyledContainer,
@@ -7,25 +7,18 @@ import {
 } from "../MenuPage/styles";
 import { useNavigate } from "react-router";
 import {
-  Form,
-  Input,
-  Typography,
-  Button,
   Space,
-  Select,
-  InputNumber,
 } from "antd";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 
 import EditSettings from "./components/EditSettings";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { userSelector } from "../../redux/users/selector";
 import UserInfo from "../../components/UserInfo";
-const { Text } = Typography;
 
 const SettingsPage = () => {
   const navigate = useNavigate();
-  const { userData, currentUser } = useSelector(userSelector);
+  const { userData } = useSelector(userSelector);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {

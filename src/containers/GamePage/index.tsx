@@ -111,14 +111,11 @@ const GamePage = () => {
   const updateUserData = async () => {
     const uid = currentUser?.uid;
     const userRef = firebase.firestore().collection("users").doc(uid);
-console.log(userRef, 'ref')
     try {
       // Get the current user data
       const doc = await userRef.get();
-console.log(doc,'doc')
       if (doc.exists) {
         const users = doc?.data();
-console.log(users,'users')
         const stats = users?.stats
           ? {
               totalGames: users?.stats?.totalGames + 1,

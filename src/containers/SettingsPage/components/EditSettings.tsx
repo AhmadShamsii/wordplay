@@ -66,16 +66,10 @@ const EditSettings = ({ userData, isModalOpen, setIsModalOpen }: any) => {
         };
         dispatch(setUserData(data));
         setIsModalOpen(false);
-      } else {
-        console.log("User not found");
-      }
+      } 
     } catch (error) {
       console.error("Error updating user data: ", error);
     }
-  };
-
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
   };
 
   const handleCancel = () => {
@@ -93,7 +87,6 @@ const EditSettings = ({ userData, isModalOpen, setIsModalOpen }: any) => {
         form={form}
         name="basic"
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete="off"
         layout="vertical"
         style={{ marginTop: "30px" }}
