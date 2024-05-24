@@ -17,7 +17,6 @@ import {
   setTimeEnd,
   clearScore,
   settingRandomLetter,
-  fetchWordsSuccess,
 } from "../../redux/words/slice";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -29,18 +28,17 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import { useNavigate } from "react-router";
 import { userSelector } from "../../redux/users/selector";
-import { setUserStats } from "../../redux/users/slice";
 import { UserOutlined } from "@ant-design/icons";
 
 const GamePage = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const { currentUser, userStats } = useSelector(userSelector);
+  const { currentUser } = useSelector(userSelector);
 
   const dispatch = useDispatch();
   const { wordsData, error } = useSelector(wordsSelector);
   const { points, totalWords } = useSelector(scoreSelector);
-  const { isTimeStart, isTimeEnd } = useSelector(timeSelector);
+  const {  isTimeEnd } = useSelector(timeSelector);
   const [showCountdown, setShowCountdown] = useState(false);
   const [showCountdownLimit, setShowCountdownLimit] = useState(false);
   const [showStartBtn, setShowStartBtn] = useState(true);
@@ -60,9 +58,6 @@ const GamePage = () => {
     setRandomLetter(randLetter);
   };
 
-  console.log('do protetive routing')
-  console.log('do protetive routing')
-
 // clear the score and random letter when component mounts
   useEffect(() => {
     return () => {
@@ -78,8 +73,7 @@ const GamePage = () => {
       dispatch(settingRandomLetter(randomLetter));
     }
   }, [wordsData]);
-  console.log(wordsData, "wordsData");
-  console.log(randomLetter, "randomletter");
+
   // focus when game starts
   useEffect(() => {
     ref.current.focus();
@@ -117,14 +111,14 @@ const GamePage = () => {
   const updateUserData = async () => {
     const uid = currentUser?.uid;
     const userRef = firebase.firestore().collection("users").doc(uid);
-
+console.log(userRef, 'ref')
     try {
       // Get the current user data
       const doc = await userRef.get();
-
+console.log(doc,'doc')
       if (doc.exists) {
         const users = doc?.data();
-
+console.log(users,'users')
         const stats = users?.stats
           ? {
               totalGames: users?.stats?.totalGames + 1,

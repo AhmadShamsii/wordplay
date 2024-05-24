@@ -34,25 +34,25 @@ const UserInfo = () => {
     {
       key: "1",
       label: "Name",
-      children: `${userData?.name}` || "NA",
+      children: `${userData?.name || "-"}`,
       span: 3,
     },
     {
       key: "2",
       label: "Email",
-      children: `${currentUser?.email}` || "NA",
+      children: `${currentUser?.email}`,
       span: 3,
     },
     {
       key: "3",
       label: "Country",
-      children: `${userData?.country}` || "NA",
+      children: `${userData?.country || "-"}`,
       span: 3,
     },
     {
       key: "4",
       label: "Age",
-      children: `${userData?.age}` || "NA",
+      children: `${userData?.age || "-"}`,
       span: 3,
     },
   ];

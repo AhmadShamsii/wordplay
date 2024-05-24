@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { setUserData } from "../../../redux/users/slice";
 import { useDispatch, useSelector } from "react-redux";
 import { userSelector } from "../../../redux/users/selector";
+
 const EditSettings = ({ userData, isModalOpen, setIsModalOpen }: any) => {
   const { currentUser } = useSelector(userSelector);
 
@@ -51,21 +52,20 @@ const EditSettings = ({ userData, isModalOpen, setIsModalOpen }: any) => {
     };
     const uid = currentUser?.uid;
     const userRef = firebase.firestore().collection("users").doc(uid);
+
     try {
       // Get the current user data
       const doc = await userRef.get();
-
       if (doc.exists) {
         await userRef.update({ userInfo: userInfo });
-        console.log("User data updated successfully");
-        setIsModalOpen(false);
         const data = {
           name: userInfo?.name,
           email: currentUser?.email,
           country: userInfo?.country,
           age: userInfo?.age,
         };
-        dispatch(setUserData(data));      
+        dispatch(setUserData(data));
+        setIsModalOpen(false);
       } else {
         console.log("User not found");
       }

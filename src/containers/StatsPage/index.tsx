@@ -7,7 +7,6 @@ import {
 } from "../MenuPage/styles";
 import { DescriptionsProps, Space } from "antd";
 import { useNavigate } from "react-router";
-import UserInfo from "../../components/UserInfo";
 import { StyledDescriptions } from "../../components/UserInfo/styles";
 import { useSelector } from "react-redux";
 import { userSelector } from "../../redux/users/selector";
@@ -54,37 +53,37 @@ const StatsPage = () => {
     {
       key: "1",
       label: "Account Created On",
-      children: `${formattedDate}` || "NA",
+      children: `${formattedDate  || "0"}`,
       span: 3,
     },
     {
       key: "2",
       label: "Total Games Played",
-      children: `${userStats?.totalGames}` || "NA",
+      children: `${userStats?.totalGames  || "0"}`,
       span: 3,
     },
     {
       key: "3",
       label: "Total Points",
-      children: `${userStats?.totalPoints}` || "NA",
+      children: `${userStats?.totalPoints  || "0"}`,
       span: 3,
     },
     {
       key: "4",
       label: "Total Words",
-      children: `${userStats?.totalWords}` || "NA",
+      children: `${userStats?.totalWords  || "0"}`,
       span: 3,
     },
     {
       key: "5",
       label: "Best total Points",
-      children: `${userStats?.bestPoints}` || "NA",
+      children: `${userStats?.bestPoints  || "0"}`,
       span: 3,
     },
     {
       key: "6",
       label: "Best total Words",
-      children: `${userStats?.bestTotalWords}` || "NA",
+      children: `${userStats?.bestTotalWords  || "0"}`,
       span: 3,
     },
   ];

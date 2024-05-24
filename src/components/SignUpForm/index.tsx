@@ -1,9 +1,17 @@
-import { createAuthUserWithEmailAndPassword } from "../../utils/firebase/firebase";
-import { Modal, Input, Button, Form, message } from "antd";
+import {
+  createAuthUserWithEmailAndPassword,
+  signInWithGooglePopup,
+} from "../../utils/firebase/firebase";
+import { Modal, Input, Button, Form, message, Divider } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../utils/firebase/firebase";
-import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  GoogleOutlined,
+  LockOutlined,
+  MailOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import firebase from "firebase/compat/app";
 import {
   setIsSignInModalOpen,
@@ -21,7 +29,7 @@ interface FormFields {
 
 const SignUpForm = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [form] = Form.useForm();
   const { isSignUpModalOpen } = useSelector(appManagerSelector);
 
@@ -105,6 +113,23 @@ const SignUpForm = () => {
       throw new Error(error?.message);
     }
   };
+
+  const signInWithGoogle = async () => {
+    const result = await signInWithGooglePopup();
+    const user = result?.user;
+    console.log(user, "user");
+    const userRef = doc(db, "users", user?.uid);
+    console.log(userRef, "ref");
+    await setDoc(userRef, {
+      email: user?.email,
+      username: user?.displayName,
+      createdAt: new Date()
+    });
+    message.success("Account created successfully!");
+    dispatch(setIsSignInModalOpen(false));
+    navigate("/play");
+  };
+
   return (
     <Modal
       title="Sign Up "
@@ -228,6 +253,18 @@ const SignUpForm = () => {
           </Button>
         </Form.Item>
       </Form>
+      <Divider style={{ fontSize: "12px" }} plain>
+        Sign Up with Google
+      </Divider>
+      <Button
+        shape="round"
+        type="primary"
+        style={{ width: "100%" }}
+        icon={<GoogleOutlined />}
+        onClick={signInWithGoogle}
+      >
+        Sign Up with Google!
+      </Button>
     </Modal>
   );
 };

@@ -1,28 +1,21 @@
 import { useSelector } from "react-redux";
-import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import AuthPage from "./containers/AuthPage";
-import GamePage from "./containers/GamePage";
 import { HelmetProvider } from "react-helmet-async";
-import ProfilePage from "./containers/ProfilePage";
-import MenuPage from "./containers/MenuPage";
-import SettingsPage from "./containers/SettingsPage";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { auth } from "./utils/firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { useDispatch } from "react-redux";
-import { setCurrentUser, setUserData, setUserStats } from "./redux/users/slice";
+import { setCurrentUser, setUserData } from "./redux/users/slice";
 import { userSelector } from "./redux/users/selector";
 import firebase from "firebase/compat/app";
-import StatsPage from "./containers/StatsPage";
-import LeaderBoardPage from "./containers/LeaderboardPage";
-import HowToPlayPage from "./containers/HowToPlayPage";
+import ProtectedRoutes from "./routes/ProtectiveRoutes";
 const helmetContext = {};
 
 function App() {
   const dispatch = useDispatch();
-  const { currentUser, userData } = useSelector(userSelector);
+  const { currentUser } = useSelector(userSelector);
 
-  
   // this useEffect is used to set the user info
   useEffect(() => {
     async function getUserData(uid: any) {
@@ -38,9 +31,6 @@ function App() {
             age: user?.userInfo?.age,
           };
           dispatch(setUserData(data));
-          // if(user?.stats){
-            // dispatch(setUserStats(user?.stats))
-          // }
         } else {
           console.log("No user document found with the provided ID");
         }
@@ -67,13 +57,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route index path="/" element={<AuthPage />} />
-          <Route path="play" element={<GamePage />} />
-          <Route path="menu" element={<MenuPage />} />
-          <Route path="menu/profile" element={<ProfilePage />} />
-          <Route path="menu/stats" element={<StatsPage />} />
-          <Route path="menu/how-to-play" element={<HowToPlayPage />} />
-          <Route path="menu/leaderboards" element={<LeaderBoardPage />} />
-          <Route path="menu/settings" element={<SettingsPage />} />
+          <Route path="/*" element={<ProtectedRoutes />} />
         </Routes>
       </BrowserRouter>
     </HelmetProvider>
