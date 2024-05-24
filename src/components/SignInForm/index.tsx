@@ -20,6 +20,7 @@ import {
   setIsSignUpModalOpen,
 } from "../../redux/appManager/slice";
 import { appManagerSelector } from "../../redux/appManager/selectors";
+import { signInWithGoogle } from "../../helpers";
 
 const SignInForm = () => {
   const navigate = useNavigate();
@@ -27,13 +28,6 @@ const SignInForm = () => {
   const { isSignInModalOpen } = useSelector(appManagerSelector);
   const [rememberMe, setRememberMe] = useState(true);
   const [isForgotPass, setIsForgotPass] = useState(false);
-
-  const signInWithGoogle = async () => {
-    await signInWithGooglePopup();
-    message.success("Signed In!");
-    dispatch(setIsSignInModalOpen(false));
-    navigate("/play");
-  };
 
   const handleSubmit = async (values: any) => {
     const { email, password } = values;

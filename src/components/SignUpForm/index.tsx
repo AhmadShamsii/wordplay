@@ -19,6 +19,7 @@ import {
 } from "../../redux/appManager/slice";
 import { appManagerSelector } from "../../redux/appManager/selectors";
 import { useNavigate } from "react-router";
+import { signInWithGoogle } from "../../helpers";
 
 interface FormFields {
   username: string;
@@ -112,20 +113,6 @@ const SignUpForm = () => {
     } catch (error: any) {
       throw new Error(error?.message);
     }
-  };
-
-  const signInWithGoogle = async () => {
-    const result = await signInWithGooglePopup();
-    const user = result?.user;
-    const userRef = doc(db, "users", user?.uid);
-    await setDoc(userRef, {
-      email: user?.email,
-      username: user?.displayName,
-      createdAt: new Date()
-    });
-    message.success("Account created successfully!");
-    dispatch(setIsSignInModalOpen(false));
-    navigate("/play");
   };
 
   return (
