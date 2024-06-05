@@ -1,11 +1,11 @@
-import { Button, Form, Input, InputNumber, Modal, Select, Space } from "antd";
-import { auth } from "../../../utils/firebase/firebase";
-import firebase from "firebase/compat/app";
-import { useState, useEffect } from "react";
-import { setUserData } from "../../../redux/users/slice";
-import { useDispatch, useSelector } from "react-redux";
-import { userSelector } from "../../../redux/users/selector";
-
+import { Button, Form, Input, InputNumber, Modal, Select, Space } from 'antd';
+import { auth } from '../../../utils/firebase/firebase';
+import firebase from 'firebase/compat/app';
+import { useState, useEffect } from 'react';
+import { setUserData } from '../../../redux/users/slice';
+import { useDispatch, useSelector } from 'react-redux';
+import { userSelector } from '../../../redux/users/selector';
+import { fetchCountries } from '../../../helpers';
 const EditSettings = ({ userData, isModalOpen, setIsModalOpen }: any) => {
   const { currentUser } = useSelector(userSelector);
 
@@ -16,6 +16,31 @@ const EditSettings = ({ userData, isModalOpen, setIsModalOpen }: any) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userRef = firebase
+          .firestore()
+          .collection('users')
+          .doc(currentUser?.uid);
+        const doc = await userRef.get();
+        if (doc.exists) {
+          form.setFieldsValue({
+            name: doc?.data()?.userInfo?.name,
+            country: doc?.data()?.userInfo?.country,
+            age: doc?.data()?.userInfo?.age,
+          });
+        } else {
+          console.log('No such document!');
+        }
+      } catch (error) {
+        console.log('Error getting document:', error);
+      }
+    };
+
+    fetchData();
+  }, [currentUser?.uid]);
+
+  useEffect(() => {
     form.setFieldsValue({
       name: userData?.name,
       country: userData?.country,
@@ -24,24 +49,18 @@ const EditSettings = ({ userData, isModalOpen, setIsModalOpen }: any) => {
   }, [isModalOpen]);
 
   useEffect(() => {
-    const fetchCountries = async () => {
+    const getCountries = async () => {
       try {
-        const response = await fetch("https://restcountries.com/v3.1/all");
-        const data = await response.json();
-        const countryData = data.map((country: any) => ({
-          name: country?.name?.common,
-          flag: country.flags.png,
-        }));
-
-        setCountries(countryData);
+        const countriesData = await fetchCountries();
+        setCountries(countriesData.data);
       } catch (error) {
-        console.error("Error fetching countries:", error);
+        // setError('Failed to fetch countries');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCountries();
+    getCountries();
   }, []);
 
   const onFinish = async (values: any) => {
@@ -51,7 +70,7 @@ const EditSettings = ({ userData, isModalOpen, setIsModalOpen }: any) => {
       age: values?.age,
     };
     const uid = currentUser?.uid;
-    const userRef = firebase.firestore().collection("users").doc(uid);
+    const userRef = firebase.firestore().collection('users').doc(uid);
 
     try {
       // Get the current user data
@@ -66,9 +85,9 @@ const EditSettings = ({ userData, isModalOpen, setIsModalOpen }: any) => {
         };
         dispatch(setUserData(data));
         setIsModalOpen(false);
-      } 
+      }
     } catch (error) {
-      console.error("Error updating user data: ", error);
+      console.error('Error updating user data: ', error);
     }
   };
 
@@ -89,27 +108,27 @@ const EditSettings = ({ userData, isModalOpen, setIsModalOpen }: any) => {
         onFinish={onFinish}
         autoComplete="off"
         layout="vertical"
-        style={{ marginTop: "30px" }}
+        style={{ marginTop: '30px' }}
       >
         <Form.Item
           label="Name"
           name="name"
-          rules={[{ required: true, message: "Please enter a name" }]}
+          rules={[{ required: true, message: 'Please enter a name' }]}
         >
           <Input size="small" placeholder="Enter your name" />
         </Form.Item>
         <Form.Item label="Email">
           <Input
             size="small"
-            value={auth?.currentUser?.email || "-"}
+            value={auth?.currentUser?.email || '-'}
             disabled
           />
         </Form.Item>
-        <Space style={{ display: "flex", justifyContent: "space-between" }}>
+        <Space style={{ display: 'flex', justifyContent: 'space-between' }}>
           <Form.Item
             label="Country"
             name="country"
-            rules={[{ required: true, message: "Please choose a country" }]}
+            rules={[{ required: true, message: 'Please choose a country' }]}
           >
             <Select
               size="small"
@@ -118,13 +137,12 @@ const EditSettings = ({ userData, isModalOpen, setIsModalOpen }: any) => {
               optionFilterProp="children"
               loading={loading}
             >
-              {countries.map((country: any) => (
-                <Select.Option key={country?.name} value={country?.name}>
-                  <img
-                    src={country.flag}
-                    alt={country?.name}
-                    style={{ marginRight: 8, width: 20 }}
-                  />
+              {countries?.map((country: any) => (
+                <Select.Option
+                  style={{ fontSize: '12px' }}
+                  key={country?.name}
+                  value={country?.name}
+                >
                   {country?.name}
                 </Select.Option>
               ))}
@@ -133,7 +151,7 @@ const EditSettings = ({ userData, isModalOpen, setIsModalOpen }: any) => {
           <Form.Item
             name="age"
             label="Age"
-            rules={[{ required: true, message: "Please enter age" }]}
+            rules={[{ required: true, message: 'Please enter age' }]}
           >
             <InputNumber
               size="small"
@@ -144,7 +162,7 @@ const EditSettings = ({ userData, isModalOpen, setIsModalOpen }: any) => {
             />
           </Form.Item>
         </Space>
-        <Space style={{ marginLeft: "48%" }}>
+        <Space style={{ marginLeft: '48%' }}>
           <Form.Item>
             <Button onClick={handleCancel}>Cancel</Button>
           </Form.Item>

@@ -17,6 +17,7 @@ import {
 import { appManagerSelector } from "../../redux/appManager/selectors";
 import { useNavigate } from "react-router";
 import { signInWithGoogle } from "../../helpers";
+import {auth }from "./../../utils/firebase/firebase"
 
 interface FormFields {
   username: string;
@@ -59,6 +60,7 @@ const SignUpForm = () => {
         navigate("/play");
         message.success("Account created successfully!");
         dispatch(setIsSignUpModalOpen(false));
+        localStorage.setItem("USER_ID", JSON.stringify(auth?.currentUser?.uid));
       }
     } catch (error: any) {
       if (error.code === "auth/email-already-in-use") {

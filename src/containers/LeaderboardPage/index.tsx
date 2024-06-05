@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { userSelector } from "../../redux/users/selector";
-import firebase from "firebase/compat/app";
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { userSelector } from '../../redux/users/selector';
+import firebase from 'firebase/compat/app';
 import {
   StyledArrow,
   StyledContainer,
   StyledSpace,
   StyledText,
-} from "../MenuPage/styles";
-import {  List, Space } from "antd";
-import { useNavigate } from "react-router";
+} from '../MenuPage/styles';
+import { List, Space } from 'antd';
+import { useNavigate } from 'react-router';
 const LeaderBoardPage = () => {
   const { currentUser } = useSelector(userSelector);
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ const LeaderBoardPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const usersRef = firebase.firestore().collection("users");
+        const usersRef = firebase.firestore().collection('users');
         const snapshot = await usersRef.get();
 
         const usersData: any = [];
@@ -36,7 +36,7 @@ const LeaderBoardPage = () => {
         // Set top 5 users
         setTopUsers(sortedUsers.slice(0, Math.min(sortedUsers.length, 5)));
       } catch (error) {
-        console.log("Error getting documents:", error);
+        console.log('Error getting documents:', error);
       }
     };
 
@@ -48,23 +48,40 @@ const LeaderBoardPage = () => {
       <StyledContainer>
         <Space
           style={{
-            display: "flex",
-            justifyContent: "space-between",
+            display: 'flex',
+            justifyContent: 'space-between',
           }}
         >
           <StyledArrow onClick={() => navigate(-1)} />
-          <StyledText style={{ color: "white" }}>Leaderboards</StyledText>
+          <StyledText style={{ color: 'white' }}>Leaderboards</StyledText>
           <div></div>
         </Space>
         <List
           itemLayout="horizontal"
           dataSource={topUsers}
-          renderItem={(user:any, index) => (
+          renderItem={(user: any, index) => (
             <List.Item>
               <List.Item.Meta
-                style={{ textAlign: "center", color:"white" }}
-                title={<span style={{color:"#d5d1d1"}} >User: {user?.username}</span>}
-                description={<span style={{color:"#d5d1d1"}} >Words: {user?.stats?.bestTotalWords || '0'}  Points: {user?.stats?.bestPoints || '0'}</span>}
+                style={{ textAlign: 'center', color: 'white' }}
+                title={
+                  <span style={{ color: '#d5d1d1' }}>
+                    User: {user?.username}
+                  </span>
+                }
+                description={
+                  <span style={{ color: '#d5d1d1' }}>
+                    Best Words:{' '}
+                    <span style={{ fontWeight: 'bold', fontSize: '16px' }}>
+                      {' '}
+                      {user?.stats?.bestTotalWords || '0'}{' '}
+                    </span>{' '}
+                    Best Points:{' '}
+                    <span style={{ fontWeight: 'bold', fontSize: '16px' }}>
+                      {' '}
+                      {user?.stats?.bestPoints || '0'}
+                    </span>
+                  </span>
+                }
               />
             </List.Item>
           )}

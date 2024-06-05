@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { userSelector } from "../../redux/users/selector";
-import { useSelector } from "react-redux";
-import { DescriptionsProps } from "antd";
-import { StyledDescriptions } from "./styles";
-import firebase from "firebase/compat/app";
+import React, { useEffect, useState } from 'react';
+import { userSelector } from '../../redux/users/selector';
+import { useSelector } from 'react-redux';
+import { DescriptionsProps } from 'antd';
+import { StyledDescriptions } from './styles';
+import firebase from 'firebase/compat/app';
 
-const UserInfo = () => {
+const UserInfo = ({ isModalOpen }: any) => {
   const [userData, setUserData] = useState<any>(null);
   const { currentUser } = useSelector(userSelector);
 
@@ -14,43 +14,43 @@ const UserInfo = () => {
       try {
         const userRef = firebase
           .firestore()
-          .collection("users")
+          .collection('users')
           .doc(currentUser?.uid);
         const doc = await userRef.get();
         if (doc.exists) {
           setUserData(doc.data()?.userInfo);
-        } 
+        }
       } catch (error) {
-        console.log("Error getting document:", error);
+        console.log('Error getting document:', error);
       }
     };
 
     fetchData();
-  }, [currentUser?.uid]);
+  }, [currentUser?.uid, isModalOpen]);
 
-  const items: DescriptionsProps["items"] = [
+  const items: DescriptionsProps['items'] = [
     {
-      key: "1",
-      label: "Name",
-      children: `${userData?.name || "-"}`,
+      key: '1',
+      label: 'Name',
+      children: `${userData?.name || '-'}`,
       span: 3,
     },
     {
-      key: "2",
-      label: "Email",
+      key: '2',
+      label: 'Email',
       children: `${currentUser?.email}`,
       span: 3,
     },
     {
-      key: "3",
-      label: "Country",
-      children: `${userData?.country || "-"}`,
+      key: '3',
+      label: 'Country',
+      children: `${userData?.country || '-'}`,
       span: 3,
     },
     {
-      key: "4",
-      label: "Age",
-      children: `${userData?.age || "-"}`,
+      key: '4',
+      label: 'Age',
+      children: `${userData?.age || '-'}`,
       span: 3,
     },
   ];

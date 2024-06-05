@@ -12,6 +12,7 @@ import {
 } from "../../redux/appManager/slice";
 
 const AuthPage = () => {
+  localStorage.setItem('USER_ID', '')
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const showSignInModal = () => {
@@ -27,6 +28,7 @@ const AuthPage = () => {
       .then(() => {
         navigate("/play");
         message.success("Welcome!");
+        localStorage.setItem("USER_ID", JSON.stringify(auth?.currentUser?.uid));
       })
       .catch((error) => {
         message.error("Error getting in!");

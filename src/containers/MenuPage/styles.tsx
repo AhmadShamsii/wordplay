@@ -1,14 +1,15 @@
-import styled from "styled-components";
-import {Typography } from "antd";
-import { ArrowLeftOutlined } from "@ant-design/icons";
-const {  Link } = Typography;
+import styled from 'styled-components';
+import { Typography } from 'antd';
+import { ArrowLeftOutlined } from '@ant-design/icons';
+const { Link } = Typography;
 
 export const StyledSpace = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  height: 60vh;
+  /* height: 60vh; */
+  margin-top: 7%;
 `;
 export const StyledContainer = styled.div`
   width: 300px;
@@ -31,6 +32,6 @@ export const StyledList = styled.div`
   transform: translate(-50%, -50%);
 `;
 export const StyledText = styled(Link)`
-  font-family: "Handlee", cursive;
+  font-family: 'Handlee', cursive;
   font-size: 25px;
 `;

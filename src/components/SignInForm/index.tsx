@@ -1,25 +1,25 @@
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   signInAuthUserWithEmailAndPassword,
   auth,
-} from "../../utils/firebase/firebase";
-import { Button, Checkbox, Divider, Form, Input, Modal, message } from "antd";
-import { LockOutlined, MailOutlined } from "@ant-design/icons";
-import { GoogleOutlined } from "@ant-design/icons";
+} from '../../utils/firebase/firebase';
+import { Button, Checkbox, Divider, Form, Input, Modal, message } from 'antd';
+import { LockOutlined, MailOutlined } from '@ant-design/icons';
+import { GoogleOutlined } from '@ant-design/icons';
 import {
   setPersistence,
   sendPasswordResetEmail,
   getAuth,
   browserSessionPersistence,
-} from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+} from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 import {
   setIsSignInModalOpen,
   setIsSignUpModalOpen,
-} from "../../redux/appManager/slice";
-import { appManagerSelector } from "../../redux/appManager/selectors";
-import { signInWithGoogle } from "../../helpers";
+} from '../../redux/appManager/slice';
+import { appManagerSelector } from '../../redux/appManager/selectors';
+import { signInWithGoogle } from '../../helpers';
 
 const SignInForm = () => {
   const navigate = useNavigate();
@@ -35,24 +35,25 @@ const SignInForm = () => {
         const auth = getAuth();
         setPersistence(auth, browserSessionPersistence)
           .then(() => {
-            ("yes");
+            ('yes');
           })
           .catch((error) => {
             console.log(error);
           });
       }
       await signInAuthUserWithEmailAndPassword(email, password);
-      navigate("/play");
-      message.success("Signed In!");
+      navigate('/play');
+      message.success('Signed In!');
       dispatch(setIsSignInModalOpen(false));
+      localStorage.setItem('USER_ID', JSON.stringify(auth?.currentUser?.uid));
     } catch (error: any) {
-      if (error.code === "auth/invalid-credential") {
-        message.error("Invalid email or passoword!");
+      if (error.code === 'auth/invalid-credential') {
+        message.error('Invalid email or passoword!');
       } else {
         console.log(error);
-        message.error("Error logging in!");
+        message.error('Error logging in!');
       }
-      dispatch(setIsSignInModalOpen(false));
+      dispatch(setIsSignInModalOpen(true));
     }
   };
 
@@ -76,10 +77,10 @@ const SignInForm = () => {
   const handleForgotPassSubmit = async ({ email }: any) => {
     try {
       await sendPasswordResetEmail(auth, email);
-      message.success("Reset Link Sent! Check your mail!");
+      message.success('Reset Link Sent! Check your mail!');
     } catch (err) {
-      console.error("Error sending reset link:", err);
-      message.error("Error sending reset link. Please try again.");
+      console.error('Error sending reset link:', err);
+      message.error('Error sending reset link. Please try again.');
     }
   };
 
@@ -92,9 +93,9 @@ const SignInForm = () => {
         footer={null}
         width={300}
         style={{
-          marginBottom: "10px",
-          fontFamily: "Handlee",
-          top: "30%",
+          marginBottom: '10px',
+          fontFamily: 'Handlee',
+          top: '30%',
         }}
         closable={false}
       >
@@ -110,17 +111,17 @@ const SignInForm = () => {
             rules={[
               {
                 required: true,
-                message: "Please input your email!",
+                message: 'Please input your email!',
               },
               {
-                type: "email",
-                message: "Please enter valid email!",
+                type: 'email',
+                message: 'Please enter valid email!',
               },
             ]}
           >
             <Input prefix={<MailOutlined />} placeholder="Email" />
           </Form.Item>
-          <Button type="primary" style={{ width: "100%" }} htmlType="submit">
+          <Button type="primary" style={{ width: '100%' }} htmlType="submit">
             Send Password Reset link
           </Button>
         </Form>
@@ -136,7 +137,7 @@ const SignInForm = () => {
         onCancel={handleCancel}
         footer={null}
         width={400}
-        style={{ marginBottom: "10px", fontFamily: "Handlee" }}
+        style={{ marginBottom: '10px', fontFamily: 'Handlee' }}
         closable={false}
       >
         <Form
@@ -151,11 +152,11 @@ const SignInForm = () => {
             rules={[
               {
                 required: true,
-                message: "Please input your email!",
+                message: 'Please input your email!',
               },
               {
-                type: "email",
-                message: "Please enter valid email!",
+                type: 'email',
+                message: 'Please enter valid email!',
               },
             ]}
           >
@@ -166,7 +167,7 @@ const SignInForm = () => {
             rules={[
               {
                 required: true,
-                message: "Please input your Password!",
+                message: 'Please input your Password!',
               },
             ]}
           >
@@ -185,9 +186,9 @@ const SignInForm = () => {
 
             <Button
               style={{
-                position: "absolute",
-                right: "-12px",
-                bottom: "2px",
+                position: 'absolute',
+                right: '-12px',
+                bottom: '2px',
               }}
               type="link"
               onClick={showForgotPassModal}
@@ -202,7 +203,7 @@ const SignInForm = () => {
               type="primary"
               htmlType="submit"
               className="login-form-button"
-              style={{ width: "100%" }}
+              style={{ width: '100%' }}
             >
               Log in
             </Button>
@@ -210,24 +211,24 @@ const SignInForm = () => {
             <Button
               onClick={handleRegister}
               type="link"
-              style={{ paddingLeft: "5px" }}
+              style={{ paddingLeft: '5px' }}
             >
               register now!
             </Button>
           </Form.Item>
         </Form>
 
-        <Divider style={{ fontSize: "12px" }} plain>
+        <Divider style={{ fontSize: '12px' }} plain>
           Sign In with Google
         </Divider>
         <Button
           shape="round"
           type="primary"
-          style={{ width: "100%" }}
+          style={{ width: '100%' }}
           icon={<GoogleOutlined />}
-          onClick={() => signInWithGoogle({dispatch, navigate})}
+          onClick={() => signInWithGoogle({ dispatch, navigate })}
         >
-          Sign in with Google!s
+          Sign in with Google
         </Button>
       </Modal>
     </>

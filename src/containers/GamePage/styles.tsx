@@ -1,15 +1,15 @@
-import styled from "styled-components";
-import { Button } from "antd";
+import styled from 'styled-components';
+import { Button } from 'antd';
 export const StyledSpace = styled.div`
   text-align: center;
   width: 300px;
   height: 200px;
-  padding: 20px;  
-  margin-top: 150px;
+  padding: 20px;
+  margin-top: 12%;
   position: relative;
   top: 0%;
   left: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
 `;
 export const StyledLetter = styled.h1`
   color: #ebf2fa;
@@ -40,7 +40,7 @@ export const StyledMessage = styled.p`
   font-weight: bold;
 `;
 export const StyledTitle = styled.h1`
-  font-family: "Croissant One", cursive;
+  font-family: 'Croissant One', cursive;
   color: #ebf2fa;
   font-size: 30px;
 `;
