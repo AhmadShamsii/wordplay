@@ -4,14 +4,14 @@ import {
   StyledList,
   StyledSpace,
   StyledText,
-} from "./styles";
-import { useNavigate } from "react-router";
-import { getAuth, signOut } from "firebase/auth";
-import { setIsSignInModalOpen } from "../../redux/appManager/slice";
-import { useDispatch, useSelector } from "react-redux";
-import { userSelector } from "../../redux/users/selector";
-import SignInForm from "../../components/SignInForm";
-import SignUpForm from "../../components/SignUpForm";
+} from './styles';
+import { useNavigate } from 'react-router';
+import { getAuth, signOut } from 'firebase/auth';
+import { setIsSignInModalOpen } from '../../redux/appManager/slice';
+import { useDispatch, useSelector } from 'react-redux';
+import { userSelector } from '../../redux/users/selector';
+import SignInForm from '../../components/SignInForm';
+import SignUpForm from '../../components/SignUpForm';
 
 const MenuPage = () => {
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ const MenuPage = () => {
     const auth = getAuth();
     signOut(auth)
       .then(() => {
-        navigate("/");
+        navigate('/');
       })
       .catch((error) => {
         // An error happened.
@@ -34,36 +34,36 @@ const MenuPage = () => {
     return (
       <StyledList>
         <StyledText
-          onClick={() => navigate("/menu/profile")}
-          style={{ color: "white" }}
+          onClick={() => navigate('/menu/profile')}
+          style={{ color: 'white' }}
         >
           Profile
         </StyledText>
         <StyledText
-          onClick={() => navigate("/menu/stats")}
-          style={{ color: "white" }}
+          onClick={() => navigate('/menu/stats')}
+          style={{ color: 'white' }}
         >
           Stats
         </StyledText>
         <StyledText
-          onClick={() => navigate("/menu/how-to-play")}
-          style={{ color: "white" }}
+          onClick={() => navigate('/menu/how-to-play')}
+          style={{ color: 'white' }}
         >
           How to Play
         </StyledText>
         <StyledText
-          onClick={() => navigate("/menu/leaderboards")}
-          style={{ color: "white" }}
+          onClick={() => navigate('/menu/leaderboards')}
+          style={{ color: 'white' }}
         >
           LeaderBoard
         </StyledText>
         <StyledText
-          onClick={() => navigate("/menu/settings")}
-          style={{ color: "white" }}
+          onClick={() => navigate('/menu/settings')}
+          style={{ color: 'white' }}
         >
           Settings
         </StyledText>
-        <StyledText style={{ color: "white" }} onClick={handleLogout}>
+        <StyledText style={{ color: 'white' }} onClick={handleLogout}>
           Logout
         </StyledText>
       </StyledList>
@@ -75,15 +75,15 @@ const MenuPage = () => {
       <StyledList>
         <StyledText
           onClick={() => dispatch(setIsSignInModalOpen(true))}
-          style={{ color: "white" }}
+          style={{ color: 'white' }}
         >
           Sign In
         </StyledText>
         <SignInForm />
         <SignUpForm />
         <StyledText
-          onClick={() => navigate("/menu/how-to-play")}
-          style={{ color: "white" }}
+          onClick={() => navigate('/menu/how-to-play')}
+          style={{ color: 'white' }}
         >
           How to Play
         </StyledText>
@@ -93,7 +93,7 @@ const MenuPage = () => {
   return (
     <StyledSpace>
       <StyledContainer>
-        <StyledArrow onClick={() => navigate("/play")} />
+        <StyledArrow onClick={() => navigate('/play')} />
         {currentUser?.isAnonymous ? (
           <MenuItemsForGuests />
         ) : (
