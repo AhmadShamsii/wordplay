@@ -1,6 +1,6 @@
-import { call, put, takeEvery } from "redux-saga/effects";
-import { fetchWordsRequest, fetchWordsSuccess, fetchWordsError } from "./slice";
-import axios from "axios";
+import { call, put, takeEvery } from 'redux-saga/effects';
+import { fetchWordsRequest, fetchWordsSuccess, fetchWordsError } from './slice';
+import axios from 'axios';
 
 function* workGetWordsFetch({ payload }: any): any {
   const { word, letter } = payload;
@@ -15,13 +15,13 @@ function* workGetWordsFetch({ payload }: any): any {
 
       const words = response;
       yield put(fetchWordsSuccess(words));
-      throw new Error("");
+      throw new Error('');
     }
   } catch (err: any) {
     yield put(fetchWordsError(err.message));
 
-    if (err.code === "ERR_BAD_REQUEST") {
-      yield put(fetchWordsError("Invalid word!"));
+    if (err.code === 'ERR_BAD_REQUEST') {
+      yield put(fetchWordsError('Invalid word!'));
     }
   }
 }

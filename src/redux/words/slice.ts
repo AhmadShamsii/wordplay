@@ -1,11 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { WordsState } from "./types";
+import { createSlice } from '@reduxjs/toolkit';
+import { WordsState } from './types';
 
 export const initialState: WordsState = {
   words: {
     wordsData: null,
     isLoading: false,
-    error: "",
+    error: '',
   },
   score: {
     totalWords: 0,
@@ -16,12 +16,12 @@ export const initialState: WordsState = {
     isTimeEnd: false,
   },
   randomLetter: {
-    letter: "",
+    letter: '',
   },
 };
 
 export const wordsSlice = createSlice({
-  name: "words",
+  name: 'words',
   initialState,
   reducers: {
     fetchWordsRequest: (state) => {
@@ -32,25 +32,25 @@ export const wordsSlice = createSlice({
         state.score.points = state.score.points + payload?.data[0].word.length;
         state.score.totalWords = state.score.totalWords + 1;
       }
-      
+
       state.words.wordsData = payload;
       state.words.isLoading = false;
     },
-    fetchWordsError: (state, {payload}) => {
+    fetchWordsError: (state, { payload }) => {
       state.words.error = payload;
       state.words.isLoading = false;
     },
-    setTimeStart: (state, {payload}) => {
+    setTimeStart: (state, { payload }) => {
       state.time.isTimeStart = payload;
     },
-    setTimeEnd: (state, {payload}) => {
+    setTimeEnd: (state, { payload }) => {
       state.time.isTimeEnd = payload;
     },
-    settingRandomLetter: (state, {payload}) => {
+    settingRandomLetter: (state, { payload }) => {
       state.randomLetter = payload;
     },
     clearErrorMsg: (state) => {
-      state.words.error = "";
+      state.words.error = '';
     },
     clearScore: (state) => {
       state.score.points = 0;

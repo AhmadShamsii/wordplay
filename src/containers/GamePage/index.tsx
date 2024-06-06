@@ -1,5 +1,5 @@
-import { Avatar, Form, Input, Space } from "antd";
-import { StyledTitle } from "./styles";
+import { Avatar, Form, Input, Space } from 'antd';
+import { StyledTitle } from './styles';
 import {
   StyledSpace,
   StyledSpace2,
@@ -7,9 +7,9 @@ import {
   StyledButton,
   StyledMessage,
   StyledLetter,
-} from "./styles";
-import Countdown from "../../components/Countdown";
-import { useEffect, useRef, useState } from "react";
+} from './styles';
+import Countdown from '../../components/Countdown';
+import { useEffect, useRef, useState } from 'react';
 import {
   fetchWordsRequest,
   setTimeStart,
@@ -17,18 +17,18 @@ import {
   setTimeEnd,
   clearScore,
   settingRandomLetter,
-} from "../../redux/words/slice";
-import { useDispatch, useSelector } from "react-redux";
+} from '../../redux/words/slice';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   wordsSelector,
   scoreSelector,
   timeSelector,
-} from "../../redux/words/selector";
-import firebase from "firebase/compat/app";
-import "firebase/compat/firestore";
-import { useNavigate } from "react-router";
-import { userSelector } from "../../redux/users/selector";
-import { UserOutlined } from "@ant-design/icons";
+} from '../../redux/words/selector';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
+import { useNavigate } from 'react-router';
+import { userSelector } from '../../redux/users/selector';
+import { LoadingOutlined, UserOutlined } from '@ant-design/icons';
 
 const GamePage = () => {
   const [form] = Form.useForm();
@@ -36,33 +36,33 @@ const GamePage = () => {
   const { currentUser } = useSelector(userSelector);
 
   const dispatch = useDispatch();
-  const { wordsData, error } = useSelector(wordsSelector);
+  const { wordsData, isLoading, error } = useSelector(wordsSelector);
   const { points, totalWords } = useSelector(scoreSelector);
-  const {  isTimeEnd } = useSelector(timeSelector);
+  const { isTimeEnd } = useSelector(timeSelector);
   const [showCountdown, setShowCountdown] = useState(false);
   const [showCountdownLimit, setShowCountdownLimit] = useState(false);
   const [showStartBtn, setShowStartBtn] = useState(true);
-  const [randomLetter, setRandomLetter] = useState("");
+  const [randomLetter, setRandomLetter] = useState('');
   const [isInputDisabled, setIsInputDisabled] = useState(true);
 
-  const [gameOverMsg, setGameOverMsg] = useState("");
+  const [gameOverMsg, setGameOverMsg] = useState('');
   const [playAgainBtn, setPlayAgainButton] = useState(false);
   const [usedWords, setUsedWords] = useState<string[]>([]);
   const ref = useRef<any>(null);
 
   // Function to get a random alphabet and update the Redux state
   const getRandomAlphabet = () => {
-    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWYZ";
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWYZ';
     const randomIndex = Math.floor(Math.random() * alphabet.length);
     const randLetter = alphabet[randomIndex];
     setRandomLetter(randLetter);
   };
 
-// clear the score and random letter when component mounts
+  // clear the score and random letter when component mounts
   useEffect(() => {
     return () => {
       dispatch(clearScore());
-      setRandomLetter("");
+      setRandomLetter('');
     };
   }, []);
 
@@ -104,13 +104,13 @@ const GamePage = () => {
     setShowCountdownLimit(true);
     setPlayAgainButton(false);
     setIsInputDisabled(false);
-    setGameOverMsg("");
+    setGameOverMsg('');
     dispatch(clearScore());
   };
 
   const updateUserData = async () => {
     const uid = currentUser?.uid;
-    const userRef = firebase.firestore().collection("users").doc(uid);
+    const userRef = firebase.firestore().collection('users').doc(uid);
     try {
       // Get the current user data
       const doc = await userRef.get();
@@ -136,20 +136,20 @@ const GamePage = () => {
             };
 
         await userRef.update({ stats: stats });
-        console.log("User data updated successfully");
+        console.log('User data updated successfully');
       } else {
-        console.log("User not found");
+        console.log('User not found');
       }
     } catch (error) {
-      console.error("Error updating user data: ", error);
+      console.error('Error updating user data: ', error);
     }
   };
 
   // Handler for game over
   const handleGameOver = () => {
-    setGameOverMsg("Times Up! Game Over!!");
+    setGameOverMsg('Times Up! Game Over!!');
     setPlayAgainButton(true);
-    setRandomLetter("");
+    setRandomLetter('');
     setIsInputDisabled(true);
 
     setShowCountdownLimit(false);
@@ -169,9 +169,9 @@ const GamePage = () => {
     };
     if (!isTimeEnd) {
       setUsedWords((prevWords) => [...prevWords, payload.word]);
-      if (usedWords.includes(payload.word)) setGameOverMsg("already used");
+      if (usedWords.includes(payload.word)) setGameOverMsg('already used');
       else if (!usedWords.includes(payload.word)) {
-        setGameOverMsg("");
+        setGameOverMsg('');
         dispatch(fetchWordsRequest(payload));
       }
     } else if (isTimeEnd) {
@@ -196,12 +196,14 @@ const GamePage = () => {
       handleGameOver();
     }
   }, [isTimeEnd]);
+
   return (
     <StyledSpace>
       <Space>
         <StyledTitle>Wordplay</StyledTitle>
         <Avatar
-          onClick={() => navigate("/menu")}
+          style={{ backgroundColor: '#1677FF', verticalAlign: 'middle' }}
+          onClick={() => navigate('/menu')}
           icon={<UserOutlined />}
           size="large"
         />
@@ -209,7 +211,11 @@ const GamePage = () => {
       {showCountdown && (
         <Countdown startFrom={3} onCountdownEnd={handleGameStart} />
       )}
-      <StyledLetter>{randomLetter}</StyledLetter>
+      {
+        <StyledLetter>
+          {isLoading ? <LoadingOutlined /> : randomLetter}
+        </StyledLetter>
+      }
       {showStartBtn && (
         <StyledButton onClick={handleCountdown} type="primary">
           Start
