@@ -5,7 +5,7 @@ export const StyledSpace = styled.div`
   width: 300px;
   height: 200px;
   padding: 20px;
-  margin-top: 12%;
+  margin-top: 30vh;
   position: relative;
   top: 0%;
   left: 50%;
